@@ -1,0 +1,28 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+@import 'mixins';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+@import 'overwrite';
+
+body{
+    font-family: $font-family;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    background-color: $body-bg;
+
+    #app{
+        display: grid;
+        grid-template-columns: 8% 57% 35%;
+        height: 100vh;
+        
+        @import 'addons';
+        @import 'sidebar';
+        @import 'main';
+        @import 'orders';
+    }
+}
