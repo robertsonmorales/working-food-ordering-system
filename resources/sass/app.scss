@@ -17,8 +17,12 @@ body{
 
     #app{
         display: grid;
-        grid-template-columns: 8% 57% 35%;
+        grid-template-columns: 8% 54% 38%;
         height: 100vh;
+        
+        .header{
+            @include flexbox(center, space-between);
+        }
         
         @import 'addons';
         @import 'sidebar';

@@ -1,5 +1,23 @@
 .btn{
     border-radius: $radius;
+    height: 50px;
+    padding: 20px;
+    @include flexbox(center, center);
+}
+
+.btn-primary{
+    box-shadow: $active-shadow;
+    color: #fff;
+}
+
+.btn-primary-outline{
+    color: $primary;
+    background-color: unquote($primary + "22");
+}
+
+.btn-danger-outline{
+    color: $danger;
+    background-color: unquote($danger + "22");
 }
 
 .nav-tabs{
@@ -34,6 +52,7 @@
     .card-body{
         text-align: left;
         padding: 0;
+        width: 100%;
 
         .card-text{
             @include flexbox(center, space-between);

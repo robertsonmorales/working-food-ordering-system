@@ -18,6 +18,7 @@ class CreateMenusTable extends Migration
             $table->foreignId('menu_category_id')->constrained('menu_categories');
             $table->string('menu_img')->nullable();
             $table->string('menu_name')->nullable();
+            $table->integer('tax')->nullable();
             $table->integer('price')->nullable();
             $table->integer('status')->default(1)->comment('1 = active; 0 = in-active');
             $table->timestamps();

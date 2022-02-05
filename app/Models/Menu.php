@@ -11,7 +11,7 @@ class Menu extends Model
 
     protected $table = "menus";
 
-    protected $fillable = ['menu_category_id', 'menu_img', 'menu_name', 'price', 'status'];
+    protected $fillable = ['menu_category_id', 'menu_img', 'menu_name', 'tax', 'price', 'status'];
 
     public function scopeActive($query){
         return $query->where('status', 1);
