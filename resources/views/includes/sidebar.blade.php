@@ -9,27 +9,27 @@
         <div class="nav-list">
             <ul class="list">
                 <li class="list-item">
-                    <a href="#" class="btn btn-nav-item">
+                    <a href="#" class="btn-nav-item">
                         <i data-feather="activity"></i>
                     </a>
                 </li>
                 <li class="list-item">
-                    <a href="#" class="btn btn-nav-item active">
+                    <a href="#" class="btn-nav-item active">
                         <i data-feather="shopping-bag"></i>
                     </a>
                 </li>
                 <li class="list-item">
-                    <a href="#" class="btn btn-nav-item">
+                    <a href="#" class="btn-nav-item">
                         <i data-feather="dollar-sign"></i>
                     </a>
                 </li>
                 <li class="list-item">
-                    <a href="#" class="btn btn-nav-item">
+                    <a href="#" class="btn-nav-item">
                         <i data-feather="bookmark"></i>
                     </a>
                 </li>
                 <li class="list-item">
-                    <a href="#" class="btn btn-nav-item">
+                    <a href="#" class="btn-nav-item">
                         <i data-feather="flag"></i>
                     </a>
                 </li>

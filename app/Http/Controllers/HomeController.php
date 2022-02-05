@@ -34,14 +34,14 @@ class HomeController extends Controller
             ->latest()
             ->get();
 
-        $menus = $this->menu->limitFields()
+        $menu = $this->menu->limitFields()
             ->active()
             ->latest()
             ->get();
 
         return view('index', [
             'categories' => $categories,
-            'menus' => $menus
+            'menu' => $menu
         ]);
     }
 }

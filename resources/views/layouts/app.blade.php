@@ -81,7 +81,5 @@
 
         @include('includes.orders')
     </div>
-
-    @yield('scripts')
 </body>
 </html>

@@ -3,7 +3,7 @@
 @section('content')
 <main class="py-4" id="menus">
     <div class="header">
-        <h3>Menus</h3>
+        <h4>Menu</h4>
         <p id="datetime"></p>
     </div>
 
@@ -33,8 +33,8 @@
             placeholder="Search here...">
     </div>
 
-    <div class="menus">
-        @foreach ($menus as $item)
+    <div class="menu">
+        @foreach ($menu as $item)
         <button class="card" data-category="{{ $item->menu_category_id }}">
             <img class="img-fluid mb-2" 
                 src="{{ $item->menu_img }}" 
@@ -50,16 +50,4 @@
         @endforeach
     </div>
 </main>
-@endsection
-
-@section('scripts')
-<script type="text/javascript">
-    var date = document.getElementById('datetime');
-
-    setInterval(() => {
-        var get_date = new Date();
-        date.innerHTML = get_date.toLocaleTimeString();
-    }, 1000);
-    
-</script>
 @endsection
