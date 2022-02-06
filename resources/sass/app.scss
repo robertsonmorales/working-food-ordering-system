@@ -19,6 +19,7 @@ body{
         display: grid;
         grid-template-columns: 8% 54% 38%;
         height: 100vh;
+        overflow: hidden;
         
         .header{
             @include flexbox(center, space-between);
@@ -28,5 +29,6 @@ body{
         @import 'sidebar';
         @import 'main';
         @import 'orders';
+        @import 'modal';
     }
 }

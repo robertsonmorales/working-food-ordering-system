@@ -1,6 +1,7 @@
 #orders{
     background-color: #fafafa;
     padding: 0 $side-margin;
+    overflow-y: auto;
 
     .actions{
         @include flexbox(center, flex-start);

@@ -50,6 +50,9 @@
         "post-install-cmd": [
             "php artisan clear-compiled",
             "chmod -R 777 public/"
+        ],
+        "copy-env": [
+            "composer run-script post-root-package-install"
         ]
     },
     "extra": {

@@ -20,8 +20,8 @@
         </ul>
     </div>
 
-    <div class="search-box">
-        <span class="search-icon">
+    <div class="group-box">
+        <span class="icon">
             <i data-feather="search"></i>
         </span>
 
@@ -50,4 +50,6 @@
         @endforeach
     </div>
 </main>
+
+@include('includes.modal')
 @endsection
