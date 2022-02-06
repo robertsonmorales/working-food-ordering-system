@@ -1,0 +1,48 @@
+.modal{
+	background-color: rgba(0,0,0,0.4);
+	width: 100vw;
+	height: 100vh;
+
+	.modal-content{
+		@extend .radius;
+		background-color: #fff;
+		width: 35%;
+
+		.modal-header{
+			position: relative;
+
+			.btn-close{
+				cursor: pointer;
+			    position: absolute;
+			    top: 20px;
+			    right: 20px;
+			}
+		}
+
+		.modal-footer{
+			.btn-claim{
+				@extend .px-5;
+			}
+		}
+	}
+}
+
+.flexbox-center{
+	@include flexbox(center, center);
+}
+
+.show{
+	animation-name: slideDown;
+	animation-duration: .4s;
+	animation-timing-function: ease;
+}
+
+@keyframes slideDown {
+	from{
+		transform: translateY(-50%);
+	}
+
+	to{
+		transform: translateY(0%);
+	}
+}

@@ -3,32 +3,7 @@ main{  // * #menus
     grid-template-rows: 5% 7% 10% 78%;
     overflow-y: hidden;
 
-    .search-box{
-        margin-bottom: $side-margin;
-        position: relative;
-        @include flexbox(center, center);
-
-        .search-icon{
-            position: absolute;
-            left: 15px;
-            color: $secondary;
-        }
-
-        .search-control{
-            padding: 10px 45px;;
-            height: 50px;
-            @extend .radius;
-            background-color: $placeholder !important;
-            border: none;
-            outline: none;
-
-            :focus{
-                background-color: #fff;
-            }
-        }
-    }
-
-    .header, .menu-categories, .search-box{
+    .header, .menu-categories, .group-box{
         margin: 0 $side-margin;
     }
 

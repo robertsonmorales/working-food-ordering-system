@@ -7018,7 +7018,7 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   padding-left: 1.5rem !important;
 }
 
-.px-5 {
+.px-5, body #app .modal .modal-content .modal-footer .btn-claim {
   padding-right: 3rem !important;
   padding-left: 3rem !important;
 }
@@ -10794,6 +10794,17 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
     display: none !important;
   }
 }
+.form-control {
+  padding: 10px 45px;
+  height: 50px;
+  background-color: #DFDFDF !important;
+  border: none;
+  outline: none;
+}
+.form-control :focus {
+  background-color: #fff;
+}
+
 .btn {
   border-radius: 20px;
   height: 50px;
@@ -10871,17 +10882,30 @@ body #app {
   display: grid;
   grid-template-columns: 8% 54% 38%;
   height: 100vh;
+  overflow: hidden;
 }
 body #app .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-body #app .radius, body #app #orders .menu-list .card .card-img, body #app main .search-box .search-control, body #app .card, body #app .card .img-fluid, .card body #app .img-fluid {
+body #app .radius, body #app .modal .modal-content, body #app #orders .menu-list .card .card-img, body #app .form-control, body #app .card, body #app .card .img-fluid, .card body #app .img-fluid {
   border-radius: 20px;
 }
 body #app .divider {
   border: 1px solid #999999;
+}
+body #app .group-box {
+  margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body #app .group-box .icon {
+  position: absolute;
+  left: 15px;
+  color: #999999;
 }
 body #app #sidebar {
   background-color: #fff;
@@ -10953,29 +10977,7 @@ body #app main {
   grid-template-rows: 5% 7% 10% 78%;
   overflow-y: hidden;
 }
-body #app main .search-box {
-  margin-bottom: 20px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-body #app main .search-box .search-icon {
-  position: absolute;
-  left: 15px;
-  color: #999999;
-}
-body #app main .search-box .search-control {
-  padding: 10px 45px;
-  height: 50px;
-  background-color: #DFDFDF !important;
-  border: none;
-  outline: none;
-}
-body #app main .search-box .search-control :focus {
-  background-color: #fff;
-}
-body #app main .header, body #app main .menu-categories, body #app main .search-box {
+body #app main .header, body #app main .menu-categories, body #app main .group-box {
   margin: 0 20px;
 }
 body #app main .menu {
@@ -10988,6 +10990,7 @@ body #app main .menu {
 body #app #orders {
   background-color: #fafafa;
   padding: 0 20px;
+  overflow-y: auto;
 }
 body #app #orders .actions {
   display: flex;
@@ -11045,4 +11048,51 @@ body #app #orders .transactions .transaction-breakdown .breakdown {
 }
 body #app #orders .transactions .transaction-breakdown .breakdown span {
   font-weight: 500;
+}
+body #app .modal {
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100vw;
+  height: 100vh;
+}
+body #app .modal .modal-content {
+  background-color: #fff;
+  width: 35%;
+}
+body #app .modal .modal-content .modal-header {
+  position: relative;
+}
+body #app .modal .modal-content .modal-header .btn-close {
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+body #app .flexbox-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body #app .show {
+  -webkit-animation-name: slideDown;
+          animation-name: slideDown;
+  -webkit-animation-duration: 0.4s;
+          animation-duration: 0.4s;
+  -webkit-animation-timing-function: ease;
+          animation-timing-function: ease;
+}
+@-webkit-keyframes slideDown {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+@keyframes slideDown {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0%);
+  }
 }
