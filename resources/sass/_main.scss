@@ -7,11 +7,34 @@ main{  // * #menus
         margin: 0 $side-margin;
     }
 
-    .menu{
+    .menu-section{
         padding: 0 $side-margin;
         overflow-y: auto;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-gap: 20px;
+        position: relative;
+
+        .menu{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            grid-gap: 20px;
+
+            .btn-card{
+                background-color: $body-bg;
+                box-shadow:  9px 9px 18px #dddddd, -9px -9px 18px #ffffff;
+
+                &:active{
+                    box-shadow: inset 9px 9px 18px #dddddd, inset -9px -9px 18px #ffffff;
+                }
+            }
+        }
+
+        #loader, #no-result{
+            @include flexbox(center, center);
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+        }
     }
 }

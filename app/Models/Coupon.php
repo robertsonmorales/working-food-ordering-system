@@ -10,4 +10,14 @@ class Coupon extends Model
     use HasFactory;
 
     protected $table = 'coupons';
+
+    protected $fillable = [
+        'code',
+        'name',
+        'percentage'
+    ];
+
+    public function scopeGetCode($query, $c){
+        return $query->where('code', $c);
+    }
 }

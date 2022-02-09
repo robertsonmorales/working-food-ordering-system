@@ -18,7 +18,7 @@ Route::get('/', function () {
 });
 
 Auth::routes([
-    'register' => false
+    'register' => false,
 ]);
 
 Route::get('/menu', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMenusTable extends Migration
+class CreateOrderListsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateMenusTable extends Migration
      */
     public function up()
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('order_lists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('menu_category_id')->constrained('menu_categories');
-            $table->string('menu_img')->nullable();
-            $table->string('menu_name')->nullable();
-            $table->float('tax', 8, 2)->nullable();
+            $table->integer('orders_id')->index();
+            $table->integer('menu_id')->index();
             $table->integer('price')->nullable();
-            $table->integer('status')->default(1)->comment('1 = active; 0 = in-active');
+            $table->float('tax', 8, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ class CreateMenusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('order_lists');
     }
 }

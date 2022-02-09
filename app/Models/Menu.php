@@ -18,10 +18,18 @@ class Menu extends Model
     }
 
     public function scopeLimitFields($query){
-        return $query->select($this->fillable);
+        return $query->select(array_merge($this->fillable, ['id']));
+    }
+
+    public function scopeSearchFor($query, $data){
+        return $query->where('menu_name', 'LIKE', '%'.$data.'%');
     }
 
     public function menu_category(){
         return $this->belongsTo(MenuCategories::class);
+    }
+
+    public function order_lists(){
+        return $this->hasOne(OrderList::class);
     }
 }
