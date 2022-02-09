@@ -3,7 +3,8 @@
 }
 
 .divider{
-    border: 1px solid $secondary;
+    border-bottom: 1px solid $secondary;
+    padding: 0 $side-margin;
 }
 
 .group-box{

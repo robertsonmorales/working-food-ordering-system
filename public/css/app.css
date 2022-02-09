@@ -6115,7 +6115,7 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   z-index: 1030;
 }
 
-.sticky-top {
+.sticky-top, body #app #orders .sticky-header {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -6893,7 +6893,7 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   margin-right: 0.25rem !important;
 }
 
-.me-2, body #app #orders .actions .btn-coupon {
+.me-2, body #app #orders .sticky-header .actions .btn-coupon {
   margin-right: 0.5rem !important;
 }
 
@@ -7043,7 +7043,7 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   padding-bottom: 1rem !important;
 }
 
-.py-4 {
+.py-4, body #app #orders .menu-list .menu-is-empty {
   padding-top: 1.5rem !important;
   padding-bottom: 1.5rem !important;
 }
@@ -7069,7 +7069,7 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   padding-top: 1rem !important;
 }
 
-.pt-4 {
+.pt-4, body #app #orders .sticky-header {
   padding-top: 1.5rem !important;
 }
 
@@ -7117,7 +7117,7 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   padding-bottom: 1rem !important;
 }
 
-.pb-4 {
+.pb-4, body #app #orders .transactions {
   padding-bottom: 1.5rem !important;
 }
 
@@ -7282,7 +7282,7 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   color: rgba(var(--bs-secondary-rgb), var(--bs-text-opacity)) !important;
 }
 
-.text-danger {
+.text-danger, body #app #orders .transactions .transaction-breakdown .breakdown #coupon {
   --bs-text-opacity: 1;
   color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
 }
@@ -7302,7 +7302,7 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   color: rgba(var(--bs-body-color-rgb), var(--bs-text-opacity)) !important;
 }
 
-.text-muted, body #app #orders .transactions .transaction-breakdown .breakdown span, .card .card-body .card-text .name {
+.text-muted, body #app #orders .transactions .transaction-breakdown .breakdown span:not[id=coupon], body #app #orders .menu-list .menu-is-empty, .card .card-body .card-text .name {
   --bs-text-opacity: 1;
   color: #6c757d !important;
 }
@@ -10794,6 +10794,28 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
     display: none !important;
   }
 }
+.radius, body #app .modal .modal-content, body #app #orders .menu-list .card .card-img, .card .img-fluid, .card, .form-control {
+  border-radius: 20px;
+}
+
+.divider {
+  border-bottom: 1px solid #999999;
+  padding: 0 20px;
+}
+
+.group-box {
+  margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.group-box .icon {
+  position: absolute;
+  left: 15px;
+  color: #999999;
+}
+
 .form-control {
   padding: 10px 45px;
   height: 50px;
@@ -10844,6 +10866,8 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   border: 1px solid transparent;
   outline: none;
   transition: all 0.3s ease;
+  background-color: #F3F3F3;
+  box-shadow: 9px 9px 18px #dddddd, -9px -9px 18px #ffffff;
 }
 .card .img-fluid {
   width: 100%;
@@ -10851,12 +10875,19 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
   -o-object-fit: cover;
      object-fit: cover;
 }
+.card .card-header {
+  background-color: transparent;
+}
 .card .card-body {
   text-align: left;
   padding: 0;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .card .card-body .card-text {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -10867,9 +10898,12 @@ body #app #sidebar nav .nav-list .list .list-item .carousel-fade .carousel-item-
 .card .card-body .card-text .price {
   font-weight: 500;
 }
-.card:hover {
-  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.05);
+
+button.card:hover {
   border: 1px solid #DFDFDF;
+}
+button.card:active {
+  box-shadow: inset 9px 9px 18px #dddddd, inset -9px -9px 18px #ffffff;
 }
 
 body {
@@ -10880,7 +10914,7 @@ body {
 }
 body #app {
   display: grid;
-  grid-template-columns: 8% 54% 38%;
+  grid-template-columns: 8% 60% 32%;
   height: 100vh;
   overflow: hidden;
 }
@@ -10889,26 +10923,9 @@ body #app .header {
   align-items: center;
   justify-content: space-between;
 }
-body #app .radius, body #app .modal .modal-content, body #app #orders .menu-list .card .card-img, body #app .form-control, body #app .card, body #app .card .img-fluid, .card body #app .img-fluid {
-  border-radius: 20px;
-}
-body #app .divider {
-  border: 1px solid #999999;
-}
-body #app .group-box {
-  margin-bottom: 20px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-body #app .group-box .icon {
-  position: absolute;
-  left: 15px;
-  color: #999999;
-}
 body #app #sidebar {
   background-color: #fff;
+  border-right: 1px solid #DFDFDF;
 }
 body #app #sidebar nav {
   height: 100%;
@@ -10980,28 +10997,56 @@ body #app main {
 body #app main .header, body #app main .menu-categories, body #app main .group-box {
   margin: 0 20px;
 }
-body #app main .menu {
+body #app main .menu-section {
   padding: 0 20px;
   overflow-y: auto;
+  position: relative;
+}
+body #app main .menu-section .menu {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   grid-gap: 20px;
 }
-body #app #orders {
-  background-color: #fafafa;
-  padding: 0 20px;
-  overflow-y: auto;
+body #app main .menu-section .menu .btn-card {
+  background-color: #F3F3F3;
+  box-shadow: 9px 9px 18px #dddddd, -9px -9px 18px #ffffff;
 }
-body #app #orders .actions {
+body #app main .menu-section .menu .btn-card:active {
+  box-shadow: inset 9px 9px 18px #dddddd, inset -9px -9px 18px #ffffff;
+}
+body #app main .menu-section #loader, body #app main .menu-section #no-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+body #app #orders {
+  overflow-y: auto;
+  border-left: 1px solid #DFDFDF;
+}
+body #app #orders .sticky-header {
+  padding-right: 20px;
+  padding-left: 20px;
+  background-color: #F3F3F3;
+}
+body #app #orders .sticky-header .actions {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 20px;
 }
+body #app #orders .menu-list {
+  padding: 0 20px;
+}
 body #app #orders .menu-list .card {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-direction: row;
   box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.05);
   margin-bottom: 10px;
@@ -11011,6 +11056,7 @@ body #app #orders .menu-list .card .card-img {
   height: 70px;
   -o-object-fit: cover;
      object-fit: cover;
+  padding: 0;
 }
 body #app #orders .menu-list .card .card-details h5, body #app #orders .menu-list .card .card-details .h5 {
   font-weight: 600;
@@ -11024,6 +11070,7 @@ body #app #orders .menu-list .card .order-qty .qty {
   text-align: center;
   width: 50px;
   border: none;
+  outline: none;
   background-color: transparent;
 }
 body #app #orders .menu-list .card .order-qty button {
@@ -11033,12 +11080,25 @@ body #app #orders .menu-list .card .order-qty button {
   color: #999999;
 }
 body #app #orders .menu-list .card .card-actions {
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 body #app #orders .menu-list .card .card-actions button {
   width: 40px;
   height: 40px;
   color: #999999;
+}
+body #app #orders .menu-list .menu-is-empty {
+  text-align: center;
+}
+body #app #orders .menu-list .menu-is-empty .feather {
+  width: 28px;
+  height: 28px;
+}
+body #app #orders .transactions {
+  padding-right: 20px;
+  padding-left: 20px;
 }
 body #app #orders .transactions .transaction-breakdown .breakdown {
   margin-bottom: 10px;
@@ -11046,7 +11106,7 @@ body #app #orders .transactions .transaction-breakdown .breakdown {
   align-items: center;
   justify-content: space-between;
 }
-body #app #orders .transactions .transaction-breakdown .breakdown span {
+body #app #orders .transactions .transaction-breakdown .breakdown span:not[id=coupon] {
   font-weight: 500;
 }
 body #app .modal {

@@ -18,7 +18,7 @@ class MenuCategories extends Model
     }
 
     public function scopeLimitFields($query){
-        return $query->select($this->fillable);
+        return $query->select(array_merge($this->fillable, ['id']));
     }
 
     public function menus(){

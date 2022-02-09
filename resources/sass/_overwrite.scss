@@ -54,6 +54,8 @@
     @extend .radius;
     outline: none;
     transition: all .3s ease;
+    background-color: $body-bg;
+    box-shadow:  9px 9px 18px #dddddd, -9px -9px 18px #ffffff;
 
     .img-fluid{
         width: 100%;
@@ -62,12 +64,18 @@
         @extend .radius;
     }
 
+    .card-header{
+        background-color: transparent;
+    }
+
     .card-body{
         text-align: left;
         padding: 0;
         width: 100%;
+        @include flexbox(center, space-between);
 
         .card-text{
+            width: 100%;
             @include flexbox(center, space-between);
 
             .name{
@@ -80,9 +88,14 @@
             }
         }
     }
+}
 
+button.card{
     &:hover{
-        box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.05);
         border: 1px solid $placeholder;
+    }
+
+    &:active{
+        box-shadow: inset 9px 9px 18px #dddddd, inset -9px -9px 18px #ffffff;
     }
 }

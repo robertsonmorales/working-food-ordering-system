@@ -1,37 +1,50 @@
-<aside class="py-4" id="orders">
-    <div class="header">
-        <h4>Order</h4>
-    </div>
+<aside id="orders">
+    <div class="sticky-header">
+        <div class="header">
+            <h4>Order #{{ $order_id }}</h4>
+        </div>
 
-    <div class="actions">
-        <button class="btn btn-primary-outline btn-coupon">
-            <span class="me-2">
-                <i data-feather="file-text"></i>
-            </span>
-            <span>Add Coupon</span>
-        </button>
-        <button class="btn btn-danger-outline btn-reset">
-            <span class="me-2">
-                <i data-feather="x"></i>
-            </span>
-            <span>Reset Order</span>
-        </button>
+        <div class="actions">
+            <button class="btn btn-primary-outline btn-coupon" 
+                data-coupon="{{ $has_coupon }}"
+                data-order-id="{{ $order_id }}">
+            
+                <span class="me-2">
+                    <i data-feather="file-text"></i>
+                </span>
+                <span id="coupon-text">{{ $has_coupon == 0 ? 'Add' : 'Remove' }} Coupon</span>
+            </button>
+            <button class="btn btn-danger-outline btn-reset">
+                <span class="me-2">
+                    <i data-feather="x"></i>
+                </span>
+                <span>Reset Order</span>
+            </button>
+        </div>
+
+        <hr class="divider">
+
     </div>
 
     <div class="menu-list">
-        <div class="card">
-            <img src="https://media-cldnry.s-nbcnews.com/image/upload/newscms/2020_27/1586837/hotdogs-te-main-200702.jpg" 
-                alt="Hotdog"
+        @if(count($order_list) != 0)
+
+        @foreach($order_list as $item)
+
+        <div class="card row mx-1 order-card"
+            data-id="{{ $item->id }}">
+            <img src="{{ $item->menus->menu_img }}" 
+                alt="{{ $item->menus->menu_name }}"
                 width="80"
                 height="70"
-                class="card-img">
+                class="card-img col-3">
             
-            <div class="card-details">
-                <div class="text-muted">Hotdog</div>
-                <h5>₱75.00</h5>
+            <div class="card-details col-7">
+                <div class="text-muted">{{ $item->menus->menu_name }}</div>
+                <h5>₱{{ number_format($item->menus->price, 2) }}</h5>
             </div>
 
-            <div class="order-qty">
+            <!-- <div class="order-qty">
                 <button class="btn btn-light btn-minus">
                     <span><i data-feather="minus"></i></span>
                 </button>
@@ -44,104 +57,47 @@
                 <button class="btn btn-light btn-plus">
                     <span><i data-feather="plus"></i></span>
                 </button>
-            </div>
+            </div> -->
 
-            <div class="card-actions">
-                <button class="btn btn-remove">
+            <div class="card-actions col-2">
+                <button class="btn btn-remove" 
+                    data-id="{{ $item->id }}">
                     <span><i data-feather="x"></i></span>
                 </button>
             </div>
         </div>
-        <div class="card">
-            <img src="https://cdn.shopify.com/s/files/1/2141/9909/products/Coke_Zero_330mL_1024x.png?v=1591901397" 
-                alt="Coke"
-                width="80"
-                height="70"
-                class="card-img">
-            
-            <div class="card-details">
-                <div class="text-muted">Coke</div>
-                <h5>₱18.00</h5>
-            </div>
+        @endforeach
 
-            <div class="order-qty">
-                <button class="btn btn-light btn-minus">
-                    <span><i data-feather="minus"></i></span>
-                </button>
+        @endif
 
-                <input type="text" 
-                    value="2" 
-                    class="form-control qty" 
-                    readonly>
-
-                <button class="btn btn-light btn-plus">
-                    <span><i data-feather="plus"></i></span>
-                </button>
-            </div>
-
-            <div class="card-actions">
-                <button class="btn btn-remove">
-                    <span><i data-feather="x"></i></span>
-                </button>
-            </div>
-        </div>
-        <div class="card">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGGe_44E31zA2w0PQoM1GY5k9kih5kbBiY0AjiJOYqghC1N0wo4WpB-VeS3I7s-10vnRk&usqp=CAU" 
-                alt="Pork Combo"
-                width="80"
-                height="70"
-                class="card-img">
-            
-            <div class="card-details">
-                <div class="text-muted">Pork Combo</div>
-                <h5>₱110.00</h5>
-            </div>
-
-            <div class="order-qty">
-                <button class="btn btn-light btn-minus">
-                    <span><i data-feather="minus"></i></span>
-                </button>
-
-                <input type="text" 
-                    value="1" 
-                    class="form-control qty" 
-                    readonly>
-
-                <button class="btn btn-light btn-plus">
-                    <span><i data-feather="plus"></i></span>
-                </button>
-            </div>
-
-            <div class="card-actions">
-                <button class="btn btn-remove">
-                    <span><i data-feather="x"></i></span>
-                </button>
-            </div>
+        <div class="menu-is-empty" style="display: {{ (count($order_list) != 0) ? 'none;' : '' }}">
+            <div class="mb-2"><i data-feather="meh"></i></div>
+            <h3>No Orders Yet.</h3>
         </div>
     </div>
 
-    <hr class="divider">
-
     <div class="transactions">
+        <hr class="divider">
+
         <div class="transaction-breakdown">
             <div class="breakdown">
                 <span>Subtotal</span>
-                <span>₱100.00</span>
+                <span id="subtotal">{{ $subtotal }}</span>
             </div>
 
             <div class="breakdown">
                 <span>Tax</span>
-                <span>₱100.00</span>
+                <span id="tax">{{ $tax }}</span>
             </div>
 
             <div class="breakdown">
                 <span>Coupon</span>
-                <span>₱100.00</span>
+                <span id="coupon" class="text-danger">(-) {{ $coupon }}</span>
             </div>
 
             <div class="breakdown">
                 <h4>Total</h4>
-                <span>₱100.00</span>
+                <span id="total">{{ $total }}</span>
             </div>
 
             <div class="transaction-action">

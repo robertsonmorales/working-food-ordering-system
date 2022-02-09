@@ -1,20 +1,28 @@
 #orders{
-    background-color: #fafafa;
-    padding: 0 $side-margin;
     overflow-y: auto;
+    border-left: 1px solid $placeholder;
 
-    .actions{
-        @include flexbox(center, flex-start);
-        margin-bottom: $side-margin;
+    .sticky-header{
+        @extend .pt-4, .sticky-top;
+        padding-right: $side-margin;
+        padding-left: $side-margin;
+        background-color: $body-bg;
 
-        .btn-coupon{
-            @extend .me-2;
+        .actions{
+            @include flexbox(center, flex-start);
+            margin-bottom: $side-margin;
+
+            .btn-coupon{
+                @extend .me-2;
+            }
         }
     }
 
     .menu-list{
+        padding: 0 $side-margin;
+
         .card{
-            @include flexbox(center, space-between);
+            @include flexbox(center, flex-start);
             flex-direction: row;
             box-shadow: 0px 0px 15px 5px rgba(0,0,0,0.05);
             margin-bottom: 10px;
@@ -24,6 +32,7 @@
                 height: 70px;
                 object-fit: cover;
                 @extend .radius;
+                padding: 0;
             }
 
             .card-details{
@@ -39,6 +48,7 @@
                     text-align: center;
                     width: 50px;
                     border: none;
+                    outline: none;
                     background-color: transparent;
                 }
 
@@ -51,7 +61,7 @@
             }
 
             .card-actions{
-                text-align: right;
+                @include flexbox(center,  flex-end);
 
                 button{
                     width: 40px;
@@ -60,17 +70,35 @@
                 }
             }
         }
+
+        .menu-is-empty{
+            text-align: center;
+            @extend .py-4, .text-muted;
+
+            .feather{
+                width: 28px;
+                height: 28px;
+            }
+        }
     }
 
     .transactions{
+        padding-right: $side-margin;
+        padding-left: $side-margin;
+        @extend .pb-4;
+
         .transaction-breakdown{
             .breakdown{
                 margin-bottom: 10px;
                 @include flexbox(center, space-between);
 
-                span{
+                span:not[id='coupon']{
                     @extend .text-muted;
                     font-weight: 500;
+                }
+
+                #coupon{
+                    @extend .text-danger;
                 }
             }
         }
