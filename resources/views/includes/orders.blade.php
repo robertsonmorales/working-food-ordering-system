@@ -1,3 +1,6 @@
+@php
+$count_orders = count($order_list);
+@endphp
 <aside id="orders">
     <div class="sticky-header">
         <div class="header">
@@ -14,7 +17,8 @@
                 </span>
                 <span id="coupon-text">{{ $has_coupon == 0 ? 'Add' : 'Remove' }} Coupon</span>
             </button>
-            <button class="btn btn-danger-outline btn-reset">
+            <button class="btn btn-danger-outline btn-reset {{ ($count_orders == 0) ? 'd-none' : '' }}"
+                id="{{ $order_id }}">
                 <span class="me-2">
                     <i data-feather="x"></i>
                 </span>
@@ -27,10 +31,9 @@
     </div>
 
     <div class="menu-list">
-        @if(count($order_list) != 0)
+        @if($count_orders != 0)
 
         @foreach($order_list as $item)
-
         <div class="card row mx-1 order-card"
             data-id="{{ $item->id }}">
             <img src="{{ $item->menus->menu_img }}" 
@@ -70,7 +73,7 @@
 
         @endif
 
-        <div class="menu-is-empty" style="display: {{ (count($order_list) != 0) ? 'none;' : '' }}">
+        <div class="menu-is-empty" style="display: {{ ($count_orders != 0) ? 'none;' : '' }}">
             <div class="mb-2"><i data-feather="meh"></i></div>
             <h3>No Orders Yet.</h3>
         </div>

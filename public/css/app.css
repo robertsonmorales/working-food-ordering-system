@@ -10991,7 +10991,7 @@ body #app #sidebar nav .user .btn-user {
 }
 body #app main {
   display: grid;
-  grid-template-rows: 5% 7% 10% 78%;
+  grid-template-rows: 5% 10% 85%;
   overflow-y: hidden;
 }
 body #app main .header, body #app main .menu-categories, body #app main .group-box {

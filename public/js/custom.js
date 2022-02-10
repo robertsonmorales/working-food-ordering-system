@@ -67,7 +67,7 @@ $(document).ready(function(){
         }else{
             let o_id = $(this).attr('data-order-id');
             if(confirm('Are you sure to remove Coupon?')){
-                httpRequest('post', 'api/apply_coupon', {
+                requestCoupon('post', 'api/apply_coupon', {
                     _token: token,
                     oid: o_id,
                     status: 'remove', // add or remove
@@ -81,7 +81,7 @@ $(document).ready(function(){
         let coupon = $('#coupod_code').val();
         let oid = $('.btn-coupon').attr('data-order-id');
 
-        httpRequest('post', 'api/apply_coupon', {
+        requestCoupon('post', 'api/apply_coupon', {
             _token: token,
             coupon_code: coupon,
             oid: oid,
@@ -110,42 +110,65 @@ $(document).ready(function(){
     });
     // ENDS HERE
 
-    function httpRequest(method, url, params, config=""){
-        axios({
-            method: 'post',
-            url: 'api/apply_coupon',
-            data: params
-        }).then((res) => {
-            if(res.data.status == 200){
-
-                if(res.data.hasOwnProperty('coupon') 
-                    && res.data.hasOwnProperty('total')){
-
-                    $('#coupon').html(res.data.coupon);
-                    $('#total').html(res.data.total);
-                    $('#coupon-text').html(res.data.button_text);
-
-                    if(res.data.button_text == 'Remove Coupon'){
-                        $('.btn-coupon').attr('data-coupon', 1);
-                    }else{
-                        $('.btn-coupon').attr('data-coupon', 0);
-                    }
-
+    $('.btn-reset').click(function(){
+        if(confirm('Reset all menu from Order?')){
+            axios({
+                method: 'post',
+                url: 'api/reset_order',
+                data: {
+                    _token: token,
+                    order_id: $(this).attr('id')
                 }
+            }).then((res) => {
+                // console.log(res);
 
-                alert(res.data.message);
+                if(res.data.status == 200){
+                    $('.menu-list .card').remove();
+                    $('.menu-is-empty').show(100);
+                    $('.btn-reset').addClass('d-none');
 
-                if($('#modal').hasClass('flexbox-center')){
-                    $('#modal').removeClass('flexbox-center');
+                    triggerCalculations(res.data);
                 }
-            }
-
-            if(res.data.status == 400){
-                alert(res.data.message);
-            }
-        });
-    }
+            }).catch(error => console.log(error));
+        }
+    });
 });
+
+function requestCoupon(method, url, params, config=""){
+    axios({
+        method: 'post',
+        url: 'api/apply_coupon',
+        data: params
+    }).then((res) => {
+        if(res.data.status == 200){
+
+            if(res.data.hasOwnProperty('coupon') 
+                && res.data.hasOwnProperty('total')){
+
+                $('#coupon').html(res.data.coupon);
+                $('#total').html(res.data.total);
+                $('#coupon-text').html(res.data.button_text);
+
+                if(res.data.button_text == 'Remove Coupon'){
+                    $('.btn-coupon').attr('data-coupon', 1);
+                }else{
+                    $('.btn-coupon').attr('data-coupon', 0);
+                }
+
+            }
+
+            alert(res.data.message);
+
+            if($('#modal').hasClass('flexbox-center')){
+                $('#modal').removeClass('flexbox-center');
+            }
+        }
+
+        if(res.data.status == 400){
+            alert(res.data.message);
+        }
+    });
+}
 
 function addOrderMenu(id){
     let url = 'api/add_order';
@@ -158,14 +181,13 @@ function addOrderMenu(id){
             id: id
         }
     }).then((res) => {
+        // console.log(res);
         if(res.data.status == 200){
             $('.menu-is-empty').hide(100);
             $('.menu-list').prepend(res.data.html);
 
-            $('#subtotal').html(res.data.subtotal);
-            $('#tax').html(res.data.tax);
-            $('#coupon').html("(-) " + res.data.coupon);
-            $('#total').html(res.data.total);
+            triggerCalculations(res.data);
+            countOrders();
         }
     }).catch((error) => {
         console.log(error);
@@ -201,17 +223,32 @@ function removeOrderMenu(id){
                 $('.menu-is-empty').show(100);
             }
 
-
-            $('#subtotal').html(res.data.subtotal);
-            $('#tax').html(res.data.tax);
-            $('#coupon').html("(-) " + res.data.coupon);
-            $('#total').html(res.data.total);
+            triggerCalculations(res.data);
+            countOrders();
         }
     });
 }
 
 function removeOrder(id){
     removeOrderMenu(id);
+}
+
+function triggerCalculations(data){
+    $('#subtotal').html(data.subtotal);
+    $('#tax').html(data.tax);
+    $('#coupon').html("(-) " + data.coupon);
+    $('#total').html(data.total);
+}
+
+function countOrders(){
+    console.log($('.menu-list .card').length);
+    if($('.menu-list .card').length > 1){
+        if($('.btn-reset').hasClass('d-none')){
+            $('.btn-reset').removeClass('d-none');
+        }
+    }else{
+        $('.btn-reset').addClass('d-none');
+    }
 }
 
 setInterval(() => {

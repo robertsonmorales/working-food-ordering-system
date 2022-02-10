@@ -9,7 +9,7 @@
     </div>
 
     <!-- categories -->
-    <div class="menu-categories">
+    <div class="menu-categories mt-2">
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link nav-category category-all active" 
@@ -28,7 +28,7 @@
     <!-- ends here -->
 
     <!-- Search here -->
-    <div class="group-box">
+    <!-- <div class="group-box">
         <span class="icon">
             <i data-feather="search"></i>
         </span>
@@ -39,7 +39,7 @@
             autocomplete="off" 
             class="form-control search-control"
             placeholder="Search here...">
-    </div>
+    </div> -->
     <!-- ends here -->
 
     <!-- menu -->
