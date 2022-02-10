@@ -21,4 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/search_menu', [App\Http\Controllers\API\ApiController::class, 'searchMenu']);
 Route::post('/add_order', [App\Http\Controllers\API\ApiController::class, 'addOrder']);
 Route::post('/remove_order_menu', [App\Http\Controllers\API\ApiController::class, 'removeOrderMenu']);
+Route::post('/reset_order', [App\Http\Controllers\API\ApiController::class, 'resetOrder']);
 Route::post('/apply_coupon', [App\Http\Controllers\API\ApiController::class, 'applyCoupon']);

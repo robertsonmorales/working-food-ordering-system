@@ -40,7 +40,12 @@ class ApiController extends Controller
             </div>
         </div>';
 
-        return $this->msgs(200, 'Added Successfully', array_merge($this->getCalculations($order), ['html' => $contentHTML]));
+        return $this->msgs(200, 'Added Successfully', 
+            array_merge(
+                $this->getCalculations($order),
+                ['html' => $contentHTML]
+            )
+        );
     }
 
     public function removeOrderMenu(Request $request){
@@ -51,6 +56,24 @@ class ApiController extends Controller
         $order = $this->order->find($data->orders_id);
 
         return $this->msgs(200, 'Order Removed Successfully', array_merge($this->getCalculations($order), []));
+    }
+
+    public function resetOrder(Request $request){
+        $order_id = $request->get('order_id');
+        $order = $this->order->find($order_id);
+        $list = $this->order_list->getOrder($order_id)->get();
+
+        foreach ($list as $key => $value) {
+            $find_order = $this->order_list->find($value->id);
+            $find_order->delete();
+        }
+
+        $count_orders_list = $this->order_list->getOrder($order_id)->count();
+        if($count_orders_list == 0){
+            return $this->msgs(200, 'Reset Successfully', $this->getCalculations($order));
+        }else{
+            return $this->msgs(400, 'Failed to reset all menu from order');
+        }
     }
 
     public function applyCoupon(Request $request){

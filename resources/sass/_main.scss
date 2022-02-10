@@ -1,6 +1,7 @@
 main{  // * #menus
     display: grid;
-    grid-template-rows: 5% 7% 10% 78%;
+    grid-template-rows: 5% 10% 85%;
+    // * 5% 7% 10% 78%
     overflow-y: hidden;
 
     .header, .menu-categories, .group-box{

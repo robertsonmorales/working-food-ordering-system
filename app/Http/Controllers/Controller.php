@@ -42,15 +42,17 @@ class Controller extends BaseController
             $coupon = $this->coupon->where('code', $order->has_coupon_code)->first();
 
             $total_discount = ($coupon->percentage / 100) * $subtotal;
+            $total = $subtotal - $total_discount;
         }else{
             $total_discount = $subtotal;
+            $total = $total_discount;
         }
 
         return array(
             'subtotal' => $this->formatNumber($subtotal),
             'tax' => $this->formatNumber($tax),
             'coupon' => is_null($order->has_coupon_code) ? '0.00' : $this->formatNumber($total_discount),
-            'total' => $this->formatNumber($subtotal - $total_discount)
+            'total' => $this->formatNumber($total)
         );
     }
 }
