@@ -4,15 +4,34 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Session;
+use Auth;
 
 class ApiController extends Controller
 {
-    
-
     public function addOrder(Request $request){
         $menu_id = $request->get('id');
         $menu_details = $this->menu->limitFields()->find($menu_id);
-        $order = $this->order->limitFields()->latest()->first();
+        $check_orders = $this->order->limitFields()
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->first();
+        if(empty($check_orders)){
+            return [
+                'user_id' => Auth::id(),
+                'order_no' => 000001,
+                'has_coupon_code' => null,
+                'status' => 1
+            ];
+
+            // $order = $this->order->create();
+        }else{
+            $order = $check_orders;
+        }
+
+        return $order;
+
+        Session::put('order', $order);
 
         $params = array(
             'price' => $menu_details->price,
@@ -48,6 +67,92 @@ class ApiController extends Controller
         );
     }
 
+    public function applyCoupon(Request $request){
+        $order_id = $request->get('oid');
+        $status = $request->get('status');
+
+        if($status == 'remove'){ // remove coupon
+            $update = $this->order->find($order_id);
+            $update->update([
+                'has_coupon_code' => null
+            ]);
+
+            if($update){
+                return $this->msgs(
+                    200, 
+                    'Coupon Remove Successfully', 
+                    array_merge(
+                        $this->getCalculations($update),
+                        ['button_text' => 'Add Coupon']
+                    )
+                );
+
+                // array(
+                //     'coupon' => '(-) ₱ 0.00',
+                //     'total' => $this->formatNumber($this->order_list->subtotal($order_id)),
+                //     'button_text' => 'Add Coupon'
+                // )
+            }
+        }else if($status == 'add'){ // apply coupon
+            $code = strtoupper($request->get('coupon_code'));
+            $verify_coupon = $this->coupon->getCode($code)->first();
+
+            if(empty($verify_coupon)){
+                return $this->msgs(400, "Invalid Coupon Code");
+            }else{
+                $update = $this->order->find($order_id);
+                $update->update([
+                    'has_coupon_code' => $code
+                ]);
+
+                if($update){
+                    $subt = $this->order_list->subtotal($order_id);
+                    $coupon = ($verify_coupon->percentage / 100) * $subt;
+
+                    return $this->msgs(
+                        200, 
+                        'Coupon Added Successfully',
+                        array_merge(
+                            $this->getCalculations($update),
+                            ['button_text' => 'Remove Coupon']
+                        ) 
+                    );
+
+                    // array(
+                    //     'coupon' => '(-) ' . $this->formatNumber($coupon),
+                    //     'total' => $this->formatNumber($subt - $coupon),
+                    //     'button_text' => 'Remove Coupon',
+                    // )
+                }
+            }
+        }
+    }
+
+    public function searchMenu(Request $request){
+        $data = $request->get('search');
+
+        $menu = $this->menu->limitFields()->searchFor($data)->latest()->get();
+        $htmlContent = "";
+
+        foreach ($menu as $key => $value) {
+            $htmlContent .= '<button class="card btn-card btn-card-'.$value['id'].'"
+                data-category="'.$value['menu_category_id'].'"
+                data-menu-id="'.$value['id'].'"
+                onclick="addOrder('.$value['id'].')">
+                <img class="img-fluid mb-2" 
+                    src="'.$value['menu_img'].'" 
+                    alt="'.$value['menu_name'].'">
+                <div class="card-body">
+                    <p class="card-text">
+                        <span class="name">'.$value['menu_name'].'</span>
+                        <span class="price">'.$this->formatNumber($value['price']).'</span></p>
+                </div>
+            </button>';
+        }
+        
+        return response()->json($htmlContent);
+    }
+
     public function removeOrderMenu(Request $request){
         $id = $request->get('id');
         $data = $this->order_list->findOrFail($id);
@@ -70,97 +175,25 @@ class ApiController extends Controller
 
         $count_orders_list = $this->order_list->getOrder($order_id)->count();
         if($count_orders_list == 0){
-            return $this->msgs(200, 'Reset Successfully', $this->getCalculations($order));
+            return $this->msgs(200, 'Reset Successfully', array_merge(
+                $this->getCalculations($order), []
+            ));
         }else{
             return $this->msgs(400, 'Failed to reset all menu from order');
         }
     }
 
-    public function applyCoupon(Request $request){
-        $order_id = $request->get('oid');
-        $status = $request->get('status');
+    // public function processOrder(Request $request){
+    //     $order_id = $request->get('order_id');
+    //     $order = $this->order->find($order_id);
 
-        if($status == 'remove'){ // remove coupon
-            $update = $this->order->find($order_id)->update([
-                'has_coupon_code' => null
-            ]);
+    //     $this->getCalculations($order);
 
-            if($update){
-                return $this->msgs(
-                    200, 
-                    'Coupon Remove Successfully', 
-                    array(
-                        'coupon' => '(-) ₱ 0.00',
-                        'total' => $this->formatNumber($this->order_list->subtotal($order_id)),
-                        'button_text' => 'Add Coupon'
-                    )
-                );
-            }
-        }else if($status == 'add'){ // apply coupon
-            $code = strtoupper($request->get('coupon_code'));
-            $verify_coupon = $this->coupon->getCode($code)->first();
-
-            if(empty($verify_coupon)){
-                return $this->msgs(400, "Invalid Coupon Code");
-            }else{
-                $update = $this->order->find($order_id)->update([
-                    'has_coupon_code' => $code
-                ]);
-
-                if($update){
-                    $subt = $this->order_list->subtotal($order_id);
-                    $coupon = ($verify_coupon->percentage / 100) * $subt;
-
-                    return $this->msgs(
-                        200, 
-                        'Coupon Added Successfully', 
-                        array(
-                            'coupon' => '(-) ' . $this->formatNumber($coupon),
-                            'total' => $this->formatNumber($subt - $coupon),
-                            'button_text' => 'Remove Coupon',
-                        )
-                    );
-                }
-            }
-        }
-    }
-
-    public function searchMenu(Request $request){
-        $data = $request->get('search');
-
-        $menu = $this->menu->limitFields()->searchFor($data)->latest()->get();
-        $htmlContent = "";
-
-        foreach ($menu as $key => $value) {
-            $htmlContent .= '<button class="card btn-card btn-card-'.$value['id'].'"
-                data-category="'.$value['menu_category_id'].'"
-                data-menu-id="'.$value['id'].'"
-                data-menu-name="'.$value['menu_name'].'"
-                onclick="addOrder('.$value['id'].')">
-                <img class="img-fluid mb-2" 
-                    src="'.$value['menu_img'].'" 
-                    alt="'.$value['menu_name'].'">
-                <div class="card-body">
-                    <p class="card-text">
-                        <span class="name">'.$value['menu_name'].'</span>
-                        <span class="price">'.$this->formatNumber($value['price']).'</span></p>
-                </div>
-            </button>';
-        }
-        
-        return response()->json($htmlContent);
-    }
-
-    public function msgs($status, $msg, $addons=[]){
-        $params = array(
-            'status' => $status,
-            'message' => $msg
-        );
-
-        if(count($addons) > 0){
-            $params = array_merge($params, $addons);
-        }
-
-        return response()->json($params);
-    }
+    //     $save_transaction = $this->trans->create(Session::get('calculations'));
+    //     if($save_transaction){
+    //         $this->msgs(200, 'Order has been process.');
+    //     }else{
+    //         $this->msgs(400, 'Failed to proces order');
+    //     }
+    // }
 }

@@ -1,9 +1,12 @@
 @extends('layouts.auth')
 
 @section('content')
-<div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
-    <div class="row justify-content-center">
-        <div class="col">
+<div class="container" style="height: 100vh;">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-md-5">
+            <div class="logo-brand text-center mb-5">
+                <img src="{{ asset('img/logo.svg') }}" width="285" style="object-fit: cover;">
+            </div>
             <div class="card p-4">
                 <div class="card-header mb-4 h4 ps-0">{{ __('Login') }}</div>
 
@@ -18,7 +21,7 @@
                                 <span class="icon">
                                     <i data-feather="mail"></i>
                                 </span>
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="off" autofocus>
                             </div>
 
                             @error('email')

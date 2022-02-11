@@ -40,13 +40,11 @@ $(document).ready(function(){
 
         axios({
             method:'get',
-            url: 'api/search_menu?search='+search,
+            url: '/search_menu?search='+search,
             params: {
                 _token: token,
             },
         }).then((res) => {
-            console.log(res.data.length);
-
             if(res.data.length == 0){
                 $('#loader').addClass('d-none');
                 $('#no-result').removeClass('d-none');
@@ -57,41 +55,6 @@ $(document).ready(function(){
                 $('#menu-list').html(res.data);
             }
         });
-    });
-
-    // Coupon application
-    $('.btn-coupon').click(function() {
-        if($(this).attr('data-coupon') == 0){ // No Coupon Applied
-            $('#modal').addClass('flexbox-center');
-            $('#modal .modal-content').addClass('show');
-        }else{
-            let o_id = $(this).attr('data-order-id');
-            if(confirm('Are you sure to remove Coupon?')){
-                requestCoupon('post', 'api/apply_coupon', {
-                    _token: token,
-                    oid: o_id,
-                    status: 'remove', // add or remove
-                });
-            }
-        }
-    });
-
-    // Modal for coupon
-    $('.btn-claim').click(function(){
-        let coupon = $('#coupod_code').val();
-        let oid = $('.btn-coupon').attr('data-order-id');
-
-        requestCoupon('post', 'api/apply_coupon', {
-            _token: token,
-            coupon_code: coupon,
-            oid: oid,
-            status: 'add'
-        });
-    });
-
-    $('.btn-close').click(() => {
-        $('#modal').removeClass('flexbox-center');
-       $('#modal .modal-content').removeClass('show'); 
     });
 
     // SELECT MENU
@@ -110,11 +73,12 @@ $(document).ready(function(){
     });
     // ENDS HERE
 
+    // RESET ORDERED MENU
     $('.btn-reset').click(function(){
         if(confirm('Reset all menu from Order?')){
             axios({
                 method: 'post',
-                url: 'api/reset_order',
+                url: '/reset_order',
                 data: {
                     _token: token,
                     order_id: $(this).attr('id')
@@ -132,14 +96,64 @@ $(document).ready(function(){
             }).catch(error => console.log(error));
         }
     });
+    // ENDS HERE
+
+    // Coupon application
+    $('.btn-coupon').click(function() {
+        if($(this).attr('data-coupon') == 0){ // No Coupon Applied
+            $('#modal').addClass('flexbox-center');
+            $('#modal .modal-content').addClass('show');
+        }else{
+            let o_id = $(this).attr('data-order-id');
+            if(confirm('Are you sure to remove Coupon?')){
+                requestCoupon('post', '/apply_coupon', {
+                    _token: token,
+                    oid: o_id,
+                    status: 'remove', // add or remove
+                });
+            }
+        }
+    });
+
+    // Modal for coupon
+    $('.btn-claim').click(function(){
+        let coupon = $('#coupod_code').val();
+        let oid = $('.btn-coupon').attr('data-order-id');
+
+        requestCoupon('post', '/apply_coupon', {
+            _token: token,
+            coupon_code: coupon,
+            oid: oid,
+            status: 'add'
+        });
+    });
+
+    // CLOSE MODAL
+    $('.btn-close').click(() => {
+        $('#modal').removeClass('flexbox-center');
+       $('#modal .modal-content').removeClass('show'); 
+    });
+    // ENDS HERE
+
+    // LOGOUT USER
+    $('.btn-user').click(function(event){
+        event.preventDefault();
+
+        if(confirm('Are you sure you want to logout?')){
+            $('#logout-form').submit();
+        }
+    });
+    // ENDS HERE
 });
 
 function requestCoupon(method, url, params, config=""){
     axios({
         method: 'post',
-        url: 'api/apply_coupon',
+        url: '/apply_coupon',
         data: params
     }).then((res) => {
+        console.log(res);
+        
         if(res.data.status == 200){
 
             if(res.data.hasOwnProperty('coupon') 
@@ -171,7 +185,7 @@ function requestCoupon(method, url, params, config=""){
 }
 
 function addOrderMenu(id){
-    let url = 'api/add_order';
+    let url = '/add_order';
 
     axios({
         method: 'post',
@@ -181,10 +195,19 @@ function addOrderMenu(id){
             id: id
         }
     }).then((res) => {
-        // console.log(res);
+        console.log(res);
+        
         if(res.data.status == 200){
             $('.menu-is-empty').hide(100);
             $('.menu-list').prepend(res.data.html);
+
+            if($('#orders').hasClass('d-none') 
+                && $('#app').hasClass('no-order')
+                && $('#menu-list').hasClass('has-order')){
+                $('#orders').removeClass('d-none');
+                $('#app').removeClass('no-order');
+                $('#menu-list').removeClass('has-order')
+            }
 
             triggerCalculations(res.data);
             countOrders();
@@ -199,7 +222,7 @@ function addOrder(id){
 }
 
 function removeOrderMenu(id){
-    let url = 'api/remove_order_menu';
+    let url = '/remove_order_menu';
 
     axios({
         method: 'post',

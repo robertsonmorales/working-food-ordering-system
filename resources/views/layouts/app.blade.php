@@ -22,7 +22,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('img/logo.jpg') }}">
 </head>
 <body>
-    <div id="app">
+    <div id="app" class="{{ $has_order ? '' : 'no-order' }}">
         {{-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -80,8 +80,6 @@
         @include('includes.sidebar')
 
         @yield('content')
-
-        @include('includes.orders')
     </div>
 
     @yield('scripts')

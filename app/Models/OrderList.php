@@ -18,6 +18,10 @@ class OrderList extends Model
         'tax'
     ];
 
+    public function scopeLimitFields($query){
+        return $query->select(array_merge($this->fillable, ['id']));
+    }
+
     public function scopeGetOrder($query, $order_id){
         return $query->where('orders_id', $order_id);
     }

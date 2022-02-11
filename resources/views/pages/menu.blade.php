@@ -44,12 +44,11 @@
 
     <!-- menu -->
     <div class="menu-section">
-        <div class="menu" id="menu-list">
+        <div class="menu {{ $has_order ? '' : 'has-order' }}" id="menu-list">
             @foreach ($menu as $item)
             <button class="card btn-card" 
                 data-category="{{ $item->menu_category_id }}"
-                data-menu-id="{{ $item->id }}"
-                data-menu-name="{{ $item->menu_name }}">
+                data-menu-id="{{ $item->id }}">
                 <img class="img-fluid mb-2" 
                     src="{{ $item->menu_img }}" 
                     alt="{{ $item->menu_name }}">
