@@ -6,10 +6,6 @@
     <div class="sticky-header">
         <div class="header">
             <h4>Order #{{ $order_id }}</h4>
-            <input type="hidden" 
-                name="order_id" 
-                id="order_id" 
-                value="{{ $order_id }}">
         </div>
 
         <div class="actions">
@@ -22,8 +18,7 @@
                 </span>
                 <span id="coupon-text">{{ $has_coupon == 0 ? 'Add' : 'Remove' }} Coupon</span>
             </button>
-            <button class="btn btn-danger-outline btn-reset {{ ($count_orders == 0) ? 'd-none' : '' }}"
-                id="{{ $order_id }}">
+            <button class="btn btn-danger-outline btn-reset {{ ($count_orders == 0) ? 'd-none' : '' }}">
                 <span class="me-2">
                     <i data-feather="x"></i>
                 </span>
@@ -105,13 +100,20 @@
                 <span id="total">{{ @$total }}</span>
             </div>
 
-            <div class="transaction-action">
-                <a href="{{ route('order.menu', ['order_id' => $order_id]) }}" 
+            <form class="transaction-action" 
+                method="POST" 
+                action="{{ route('order.summary') }}">
+                @csrf
+                <input type="hidden" 
+                    name="order_id" 
+                    id="order_id" 
+                    value="{{ $order_id }}">
+                <button type="submit" 
                     class="btn btn-primary w-100" 
                     id="btn-save">
                     <span>Checkout</span>
-                </a>
-            </div>
+                </button>
+            </form>
         </div>
     </div>
 </aside>

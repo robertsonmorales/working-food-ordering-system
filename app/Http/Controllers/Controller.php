@@ -55,14 +55,13 @@ class Controller extends BaseController
             $total = $total_discount;
         }
 
+        $set_coupon = is_null($order->has_coupon_code) ? '0.00' : $total_discount;
         $this->triggerCalculations(array(
             'order_id' => $order->id,
-            'subtotal' => $subtotal,
+            'subtotal' => (int) $subtotal,
             'tax' => $tax,
-            'coupon' => is_null($order->has_coupon_code) 
-                ? '0.00' 
-                : $this->formatNumber($total_discount),
-            'total' => $total
+            'coupon' => (int) $set_coupon,
+            'total' => (int) $total
         ));
 
         $data = array(

@@ -22,8 +22,8 @@ Auth::routes([
 ]);
 
 Route::get('/menu', [App\Http\Controllers\HomeController::class, 'menu'])->name('home');
-Route::get('/ordered_menu', [App\Http\Controllers\HomeController::class, 'orderedMenu'])
-    ->name('order.menu');
+Route::post('/order_summary', [App\Http\Controllers\HomeController::class, 'orderSummary'])
+    ->name('order.summary');
     
 Route::post('/process_order', [App\Http\Controllers\HomeController::class, 'processOrder'])->name('process.order');
 

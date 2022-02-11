@@ -81,10 +81,10 @@ $(document).ready(function(){
                 url: '/reset_order',
                 data: {
                     _token: token,
-                    order_id: $(this).attr('id')
+                    order_id: $('#order_id').val()
                 }
             }).then((res) => {
-                // console.log(res);
+                console.log(res);
 
                 if(res.data.status == 200){
                     $('.menu-list .card').remove();
@@ -104,7 +104,7 @@ $(document).ready(function(){
             $('#modal').addClass('flexbox-center');
             $('#modal .modal-content').addClass('show');
         }else{
-            let o_id = $(this).attr('data-order-id');
+            let o_id = $('#order_id').val();
             if(confirm('Are you sure to remove Coupon?')){
                 requestCoupon('post', '/apply_coupon', {
                     _token: token,
@@ -148,8 +148,8 @@ $(document).ready(function(){
 
 function requestCoupon(method, url, params, config=""){
     axios({
-        method: 'post',
-        url: '/apply_coupon',
+        method: method,
+        url: url,
         data: params
     }).then((res) => {
         console.log(res);

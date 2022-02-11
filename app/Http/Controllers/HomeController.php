@@ -72,7 +72,7 @@ class HomeController extends Controller
         return view('pages.menu', $params);
     }
 
-    public function orderedMenu(Request $request){
+    public function orderSummary(Request $request){
         $order_id = $request->input('order_id');
         $order = $this->order->find($order_id);
         if(empty($order)){
@@ -82,7 +82,7 @@ class HomeController extends Controller
 
             $calc = $this->getCalculations($order);
 
-            return view('pages.ordered_menu', [
+            return view('pages.order_summary', [
                 'order_id' => $order_id,
                 'calculation' => $calc,
                 'order_list' => $order_list
@@ -94,10 +94,10 @@ class HomeController extends Controller
         $order_id = $request->has('order_id');
         if($order_id){
             $calc = Session::get('calculations');
-            $calc['coupon'] = $this->formatNumber($calc['coupon'], false);
-            $calc['tax'] = $this->formatNumber($calc['tax'], false);
+            // $calc['coupon'] = $this->formatNumber($calc['coupon'], false);
+            // $calc['tax'] = $this->formatNumber($calc['tax'], false);
             $calc['status'] = 1;
-
+            return $calc;
             $save_trans = $this->trans->create($calc);
             if($save_trans){
                 // $this->order->create([
