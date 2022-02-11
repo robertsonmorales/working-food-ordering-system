@@ -7,23 +7,30 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
-use App\Models\{Order, OrderList, User, Menu, Coupon};
+use Session;
+use App\Models\{MenuCategories, Order, OrderList, User, Menu, Coupon, Transaction};
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $user, $order, $order_list, $menu, $coupon;
-    public function __construct(User $user, OrderList $order_list, Order $order, Menu $menu, Coupon $coupon){
+    protected $user, $order, $order_list, $menu, $categories, $coupon, $trans;
+    public function __construct(User $user, OrderList $order_list, Order $order, Menu $menu, MenuCategories $categories, Coupon $coupon, Transaction $trans){
+        $this->menu = $menu;
+        $this->category = $categories;
         $this->user = $user;
         $this->order = $order;
         $this->order_list = $order_list;
-        $this->menu = $menu;
         $this->coupon = $coupon;
+        $this->trans = $trans;
     }
 
-    public function formatNumber($int){
-        return "₱ ".number_format($int, 2);
+    public function formatNumber($int, $symbol=true){
+        if($symbol){
+            return "₱ ".number_format($int, 2);
+        }else{
+            return number_format($int, 2);
+        }
     }
 
     public function getCalculations($order){
@@ -48,11 +55,39 @@ class Controller extends BaseController
             $total = $total_discount;
         }
 
-        return array(
+        $set_coupon = is_null($order->has_coupon_code) ? '0.00' : $total_discount;
+        $this->triggerCalculations(array(
+            'order_id' => $order->id,
+            'subtotal' => (int) $subtotal,
+            'tax' => $tax,
+            'coupon' => (int) $set_coupon,
+            'total' => (int) $total
+        ));
+
+        $data = array(
             'subtotal' => $this->formatNumber($subtotal),
             'tax' => $this->formatNumber($tax),
-            'coupon' => is_null($order->has_coupon_code) ? '0.00' : $this->formatNumber($total_discount),
+            'coupon' => is_null($order->has_coupon_code) ? '₱ 0.00' : $this->formatNumber($total_discount),
             'total' => $this->formatNumber($total)
         );
+
+        return $data;
+    }
+
+    public function msgs($status, $msg, $addons=[]){
+        $params = array(
+            'status' => $status,
+            'message' => $msg
+        );
+
+        if(count($addons) > 0){
+            $params = array_merge($params, $addons);
+        }
+
+        return response()->json($params);
+    }
+
+    public function triggerCalculations($data){
+        Session::put('calculations', $data);
     }
 }

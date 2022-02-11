@@ -1,7 +1,8 @@
-@php
-$count_orders = count($order_list);
-@endphp
-<aside id="orders">
+<aside id="orders" 
+    class="{{ ($has_order) ? '' : 'd-none' }}">
+    @php
+    $count_orders = @count($order_list);
+    @endphp
     <div class="sticky-header">
         <div class="header">
             <h4>Order #{{ $order_id }}</h4>
@@ -17,8 +18,7 @@ $count_orders = count($order_list);
                 </span>
                 <span id="coupon-text">{{ $has_coupon == 0 ? 'Add' : 'Remove' }} Coupon</span>
             </button>
-            <button class="btn btn-danger-outline btn-reset {{ ($count_orders == 0) ? 'd-none' : '' }}"
-                id="{{ $order_id }}">
+            <button class="btn btn-danger-outline btn-reset {{ ($count_orders == 0) ? 'd-none' : '' }}">
                 <span class="me-2">
                     <i data-feather="x"></i>
                 </span>
@@ -27,12 +27,10 @@ $count_orders = count($order_list);
         </div>
 
         <hr class="divider">
-
     </div>
 
     <div class="menu-list">
         @if($count_orders != 0)
-
         @foreach($order_list as $item)
         <div class="card row mx-1 order-card"
             data-id="{{ $item->id }}">
@@ -70,7 +68,6 @@ $count_orders = count($order_list);
             </div>
         </div>
         @endforeach
-
         @endif
 
         <div class="menu-is-empty" style="display: {{ ($count_orders != 0) ? 'none;' : '' }}">
@@ -85,27 +82,38 @@ $count_orders = count($order_list);
         <div class="transaction-breakdown">
             <div class="breakdown">
                 <span>Subtotal</span>
-                <span id="subtotal">{{ $subtotal }}</span>
+                <span id="subtotal">{{ @$subtotal }}</span>
             </div>
 
             <div class="breakdown">
                 <span>Tax</span>
-                <span id="tax">{{ $tax }}</span>
+                <span id="tax">{{ @$tax }}</span>
             </div>
 
             <div class="breakdown">
                 <span>Coupon</span>
-                <span id="coupon" class="text-danger">(-) {{ $coupon }}</span>
+                <span id="coupon" class="text-danger">(-) {{ @$coupon }}</span>
             </div>
 
             <div class="breakdown">
                 <h4>Total</h4>
-                <span id="total">{{ $total }}</span>
+                <span id="total">{{ @$total }}</span>
             </div>
 
-            <div class="transaction-action">
-                <button class="btn btn-primary w-100">Save Order</button>
-            </div>
+            <form class="transaction-action" 
+                method="POST" 
+                action="{{ route('order.summary') }}">
+                @csrf
+                <input type="hidden" 
+                    name="order_id" 
+                    id="order_id" 
+                    value="{{ $order_id }}">
+                <button type="submit" 
+                    class="btn btn-primary w-100" 
+                    id="btn-save">
+                    <span>Checkout</span>
+                </button>
+            </form>
         </div>
     </div>
 </aside>

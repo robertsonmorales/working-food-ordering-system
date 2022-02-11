@@ -8,7 +8,7 @@
       <p>Input Coupon Code</p>
       <div class="group-box">
         <span class="icon"><i data-feather="search"></i></span>
-        <input type="text" name="coupod_code" id="coupod_code" class="form-control" placeholder="Ex: Go2018"  autocomplete="coupon_code">
+        <input type="text" name="coupod_code" id="coupod_code" class="form-control" placeholder="Ex: Go2018" autocomplete="off">
       </div>
     </div>
     <div class="modal-footer">

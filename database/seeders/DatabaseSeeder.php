@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             MenuCategoriesSeeder::class,
             MenuSeeder::class,
             CouponSeeder::class,
-            OrderSeeder::class,
+            // OrderSeeder::class,
         ]);
     }
 }

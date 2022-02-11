@@ -29,6 +29,10 @@ main{  // * #menus
             }
         }
 
+        .has-order{
+            grid-template-columns: repeat(5, 1fr);
+        }
+
         #loader, #no-result{
             @include flexbox(center, center);
             position: absolute;

@@ -32,4 +32,8 @@ body{
         @import 'orders';
         @import 'modal';
     }
+
+    .no-order{
+        grid-template-columns: 8% auto !important;
+    }
 }
