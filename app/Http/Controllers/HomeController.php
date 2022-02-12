@@ -36,24 +36,23 @@ class HomeController extends Controller
      */
     public function menu()
     {
+        // Session::forget('calculations');
+        // Session::forget('order');
+
         $categories = $this->category->limitFields()->active()->latest()->get();
         $menu = $this->menu->limitFields()->active()->latest()->get();
         $calc = [];
 
-        $check_order = $this->order->latest()->first();
+        $check_order = $this->order
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->first();
+
         if(empty($check_order)){
             $has_order = false;
         }else{
             $has_order = true;
             $order = Session::get('order');
-
-            // $new_order = $this->order->create([
-            //     'user_id' => Auth::id(),
-            //     'order_no' => (int) $order->order_no + 1
-            // ]);
-
-            // Session::put('order', $new_order);
-
             $calc = @$this->getCalculations($order);
 
             $ol = $this->order_list;
@@ -63,8 +62,8 @@ class HomeController extends Controller
         $params = array_merge([
             'categories' => @$categories,
             'menu' => @$menu,
-            'has_order' => @$has_order,
-            'has_coupon' => @is_null($order->has_coupon_code) ? 0 : 1,
+            'has_order' => $has_order,
+            'has_coupon' => @is_null($order->has_coupon_code) ? 0 : 1, // 0 = null; 1 = has_code
             'order_id' => @$order->id,
             'order_list' => @$order_list
         ], @$calc);
@@ -72,55 +71,17 @@ class HomeController extends Controller
         return view('pages.menu', $params);
     }
 
-    public function orderSummary(Request $request){
-        $order_id = $request->input('order_id');
-        $order = $this->order->find($order_id);
-        if(empty($order)){
-            abort(404);
-        }else{
-            $order_list = $this->order_list->limitFields()->getOrder($order_id)->get();
-
-            $calc = $this->getCalculations($order);
-
-            return view('pages.order_summary', [
-                'order_id' => $order_id,
-                'calculation' => $calc,
-                'order_list' => $order_list
-            ]);
-        }
-    }
-
-    public function processOrder(Request $request){
-        $order_id = $request->has('order_id');
-        if($order_id){
-            $calc = Session::get('calculations');
-            // $calc['coupon'] = $this->formatNumber($calc['coupon'], false);
-            // $calc['tax'] = $this->formatNumber($calc['tax'], false);
-            $calc['status'] = 1;
-            return $calc;
-            $save_trans = $this->trans->create($calc);
-            if($save_trans){
-                // $this->order->create([
-                //     'user_id' => Auth::id(),
-                //     'order_no' => ($this->order->find($calc['order_id'])->order_no + 1),
-                //     'has_coupon_code' => null,
-                //     'status' => 1
-                // ]);
-
-                return redirect()->route('home')->with('Your order has been process');
-            }else{
-                abort(400);
-            }
-        }else{
-            abort(400);
-        }
-    }
-
+    // * ADD ORDER MENU
     public function addOrder(Request $request){
         $menu_id = $request->get('id');
         $menu_details = $this->menu->limitFields()->find($menu_id);
+
+        // checks order history
         $check_orders = $this->order->limitFields()
-            ->where('user_id', Auth::id())->latest()->first();
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->first();
+
         if(empty($check_orders)){
             $order = $this->order->create([
                 'user_id' => Auth::id(),
@@ -134,14 +95,12 @@ class HomeController extends Controller
 
         Session::put('order', $order);
 
-        $params = array(
+        $insert_order = $this->order_list->create(array(
             'price' => $menu_details->price,
             'tax' => $menu_details->tax,
             'orders_id' => $order->id,
             'menu_id' => $menu_id
-        );
-
-        $insert_order = $this->order_list->create($params);
+        ));
 
         $times = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
 
@@ -162,14 +121,51 @@ class HomeController extends Controller
 
         return $this->msgs(200, 'Added Successfully', 
             array_merge(
-                $this->getCalculations($order),
-                ['html' => $contentHTML]
+                $this->getCalculations($order), [
+                    'html' => $contentHTML, 
+                    'order_id' => $order->id,
+                    'order_no' => $order->order_no
+                ]
             )
         );
     }
 
+    // * REMOVE ORDER MENU
+    public function removeOrderMenu(Request $request){
+        $id = $request->get('id');
+        $data = $this->order_list->findOrFail($id);
+        $data->delete();
+
+        $order = $this->order->find($data->orders_id);
+
+        return $this->msgs(200, 'Order Removed Successfully', array_merge($this->getCalculations($order), []));
+    }
+
+    // * RESET ORDER MENU
+    public function resetOrder(Request $request){
+        $order_id = $request->get('order_id');
+        $order = $this->order->find($order_id);
+        $list = $this->order_list->getOrder($order_id)->get();
+
+        foreach ($list as $key => $value) {
+            $find_order = $this->order_list->find($value->id);
+            $find_order->delete();
+        }
+
+        $count_orders_list = $this->order_list->getOrder($order_id)->count();
+        if($count_orders_list == 0){
+            return $this->msgs(200, 'Reset Successfully', array_merge(
+                $this->getCalculations($order), []
+            ));
+        }else{
+            return $this->msgs(400, 'Failed to reset all menu from order');
+        }
+    }
+
+    // * APPLY COUPON
     public function applyCoupon(Request $request){
-        $order_id = $request->get('oid');
+        // return $request->all();
+        $order_id = $request->get('order_id');
         $status = $request->get('status');
 
         if($status == 'remove'){ // remove coupon
@@ -179,23 +175,16 @@ class HomeController extends Controller
             ]);
 
             if($update){
-                return $this->msgs(
-                    200, 
-                    'Coupon Remove Successfully', 
+                Session::put('order', $update);
+
+                return $this->msgs(200, 'Coupon Remove Successfully', 
                     array_merge(
                         $this->getCalculations($update),
                         ['button_text' => 'Add Coupon']
                     )
                 );
-
-                // array(
-                //     'coupon' => '(-) ₱ 0.00',
-                //     'total' => $this->formatNumber($this->order_list->subtotal($order_id)),
-                //     'button_text' => 'Add Coupon'
-                // )
             }
-        }else if($status == 'add'){ // apply coupon
-
+        }else if($status == 'add'){
             $code = strtoupper($request->get('coupon_code'));
             $verify_coupon = $this->coupon->getCode($code)->first();
 
@@ -208,6 +197,8 @@ class HomeController extends Controller
                 ]);
 
                 if($update){
+                    Session::put('order', $update);
+
                     $subt = $this->order_list->subtotal($order_id);
                     $coupon = ($verify_coupon->percentage / 100) * $subt;
 
@@ -216,11 +207,14 @@ class HomeController extends Controller
                             ['button_text' => 'Remove Coupon']
                         ) 
                     );
+                }else{
+                    return $this->msgs(400, "Failed to apply coupon");
                 }
             }
         }
     }
 
+    // * SEARCH MENU
     public function searchMenu(Request $request){
         $data = $request->get('search');
 
@@ -246,33 +240,53 @@ class HomeController extends Controller
         return response()->json($htmlContent);
     }
 
-    public function removeOrderMenu(Request $request){
-        $id = $request->get('id');
-        $data = $this->order_list->findOrFail($id);
-        $data->delete();
+    // * ORDER SUMMARY VIEW
+    public function orderSummary(Request $request){
+        $order_id = $request->input('order_id');
+        $order = $this->order->find($order_id);
 
-        $order = $this->order->find($data->orders_id);
+        if(empty($order)){
+            abort(404);
+        }else{
+            $order_list = $this->order_list->limitFields()->getOrder($order_id)->get();
+            $calc = $this->getCalculations($order);
 
-        return $this->msgs(200, 'Order Removed Successfully', array_merge($this->getCalculations($order), []));
+            return view('pages.order_summary', [
+                'order_id' => $order_id,
+                'calculation' => $calc,
+                'order_list' => $order_list
+            ]);
+        }
     }
 
-    public function resetOrder(Request $request){
-        $order_id = $request->get('order_id');
-        $order = $this->order->find($order_id);
-        $list = $this->order_list->getOrder($order_id)->get();
+    // * PROCESS ORDER 
+    public function processOrder(Request $request){
+        $order_id = $request->has('order_id');
+        if($order_id){
+            $calc = Session::get('calculations');
+            $calc['status'] = 1;
 
-        foreach ($list as $key => $value) {
-            $find_order = $this->order_list->find($value->id);
-            $find_order->delete();
-        }
+            $save_trans = $this->trans->create($calc);
 
-        $count_orders_list = $this->order_list->getOrder($order_id)->count();
-        if($count_orders_list == 0){
-            return $this->msgs(200, 'Reset Successfully', array_merge(
-                $this->getCalculations($order), []
-            ));
+            if($save_trans){
+                $order = $this->order->create([
+                    'user_id' => Auth::id(),
+                    'order_no' => ($this->order->find($calc['order_id'])->order_no + 1),
+                    'has_coupon_code' => null,
+                    'status' => 1
+                ]);
+
+                Session::forget('calculations');
+                Session::put('order', $order);
+
+                return redirect()
+                    ->route('home')
+                    ->with('message', 'Order have been successfully saved and is now pending.');
+            }else{
+                abort(400);
+            }
         }else{
-            return $this->msgs(400, 'Failed to reset all menu from order');
+            abort(400);
         }
     }
 }

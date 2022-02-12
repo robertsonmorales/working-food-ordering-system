@@ -27,7 +27,6 @@ Route::post('/order_summary', [App\Http\Controllers\HomeController::class, 'orde
     
 Route::post('/process_order', [App\Http\Controllers\HomeController::class, 'processOrder'])->name('process.order');
 
-
 // route withou loading
 Route::get('/search_menu', [App\Http\Controllers\HomeController::class, 'searchMenu']);
 Route::post('/add_order', [App\Http\Controllers\HomeController::class, 'addOrder']);

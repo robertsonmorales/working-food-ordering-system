@@ -16,3 +16,20 @@
     </div>
   </div>
 </div>
+
+@empty(!session()->get('message'))
+<div class="modal flexbox-center" id="order-modal">
+  <div class="modal-content show">
+    <div class="modal-header">
+      <h4>Order</h4>
+      <span class="btn-close"></span>
+    </div>
+    <div class="modal-body">
+      <p>{{ session()->get('message') }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary btn-order-close">Close</button>
+    </div>
+  </div>
+</div>
+@endempty

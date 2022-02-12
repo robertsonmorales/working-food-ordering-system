@@ -5,24 +5,20 @@
     @endphp
     <div class="sticky-header">
         <div class="header">
-            <h4>Order #{{ $order_id }}</h4>
+            <h4 class="order-no">Order #{{ $order_id }}</h4>
         </div>
 
         <div class="actions">
-            <button class="btn btn-primary-outline btn-coupon" 
-                data-coupon="{{ $has_coupon }}"
-                data-order-id="{{ $order_id }}">
-            
+            <button class="btn btn-primary-outline btn-coupon {{ ($count_orders == 0) ? 'd-none' : '' }}" 
+                data-coupon="{{ $has_coupon }}">
                 <span class="me-2">
                     <i data-feather="file-text"></i>
                 </span>
                 <span id="coupon-text">{{ $has_coupon == 0 ? 'Add' : 'Remove' }} Coupon</span>
             </button>
-            <button class="btn btn-danger-outline btn-reset {{ ($count_orders == 0) ? 'd-none' : '' }}">
-                <span class="me-2">
-                    <i data-feather="x"></i>
-                </span>
-                <span>Reset Order</span>
+            <button class="btn btn-danger-outline btn-reset {{ ($count_orders < 2) ? 'd-none' : '' }}">
+                <span class="me-2"><i data-feather="x"></i></span>
+                <span>Clear Order</span>
             </button>
         </div>
 
@@ -106,11 +102,11 @@
                 @csrf
                 <input type="hidden" 
                     name="order_id" 
-                    id="order_id" 
+                    id="order-id" 
                     value="{{ $order_id }}">
                 <button type="submit" 
                     class="btn btn-primary w-100" 
-                    id="btn-save">
+                    id="btn-save" {{ ($count_orders <= 0) ? 'disabled' : '' }}>
                     <span>Checkout</span>
                 </button>
             </form>
