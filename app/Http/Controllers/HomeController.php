@@ -50,13 +50,14 @@ class HomeController extends Controller
 
         if(empty($check_order)){
             $has_order = false;
+            $order_list = 0;
         }else{
             $has_order = true;
             $order = Session::get('order');
-            $calc = @$this->getCalculations($order);
+            $calc = $this->getCalculations($order);
 
             $ol = $this->order_list;
-            $order_list = @$ol->getOrder($order->id)->latest()->get();
+            $order_list = $ol->getOrder($order->id)->latest()->get();
         }
 
         $params = array_merge([

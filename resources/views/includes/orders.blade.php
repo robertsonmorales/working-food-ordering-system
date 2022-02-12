@@ -1,8 +1,7 @@
 <aside id="orders" 
     class="{{ ($has_order) ? '' : 'd-none' }}">
-    @php
-    $count_orders = @count($order_list);
-    @endphp
+
+    @php $count_orders = ($order_list == 0) ? 0 : count($order_list); @endphp
     <div class="sticky-header">
         <div class="header">
             <h4 class="order-no">Order #{{ $order_id }}</h4>
