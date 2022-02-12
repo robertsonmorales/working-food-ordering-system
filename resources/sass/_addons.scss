@@ -45,3 +45,8 @@ table td{
 .flex-center-end{
     @include flexbox(center, flex-end);
 }
+
+#myGrid{
+    width: 100%;
+    height: 100%;
+}
