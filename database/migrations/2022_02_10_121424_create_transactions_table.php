@@ -16,10 +16,10 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->integer('order_id')->index();
-            $table->integer('subtotal')->nullable();
+            $table->float('subtotal', 8, 2)->nullable();
             $table->float('tax', 8, 2)->nullable();
             $table->float('coupon', 8, 2)->nullable();
-            $table->integer('total')->nullable();
+            $table->float('total', 8, 2)->nullable();
             $table->integer('status')->default(1)->comment('1=pending,2=processing,3=served,0=cancelled');
             $table->timestamps();
         });
