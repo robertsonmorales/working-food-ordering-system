@@ -3,18 +3,6 @@
 let token = $('meta[name=csrf-token]').attr('content');
 
 $(document).ready(function(){
-    // let path = window.location.pathname;
-    // let pathname = path.split('/').reverse()[0];
-
-    // let navs = $('.btn-nav-item');
-    // for (let i = 0; i < navs.length; i++) {
-    //     if(navs[i].getAttribute('data-nav') == pathname){
-    //         navs[i].classList.add('active');
-    //     }else{
-    //         navs[i].classList.remove('active');
-    //     }
-    // }
-
     // Tab Select
     $('.nav-category').click(function(){
         let cat_id = $(this).attr('id');
@@ -211,7 +199,7 @@ function addOrderMenu(id){
             id: id
         }
     }).then((res) => {
-        console.log(res);
+        // console.log(res);
         
         if(res.data.status == 200){
             $('.menu-is-empty').hide(100);
