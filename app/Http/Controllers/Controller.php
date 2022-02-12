@@ -34,43 +34,62 @@ class Controller extends BaseController
     }
 
     public function getCalculations($order){
-        $calc = $this->order_list->getOrder($order->id);
-        $subtotal = $calc->sum('price');
+        if(!empty($order)){
+            $calc = $this->order_list->getOrder($order->id);
+            $subtotal = $calc->sum('price');
 
-        $ans = [];
-        foreach ($calc->get() as $key => $value) {
-            $ans[] = $value->price * $value->tax;
-        }
+            $ans = [];
+            foreach ($calc->get() as $key => $value) {
+                $ans[] = $value->price * $value->tax;
+            }
 
-        $tax = array_sum($ans);
+            $tax = array_sum($ans);
 
-        $total_discount = "";
-        if(!is_null($order->has_coupon_code)){
-            $coupon = $this->coupon->where('code', $order->has_coupon_code)->first();
+            $total_discount = "";
+            if(!is_null($order->has_coupon_code)){
+                $coupon = $this->coupon->where('code', $order->has_coupon_code)->first();
 
-            $total_discount = ($coupon->percentage / 100) * $subtotal;
-            $total = $subtotal - $total_discount;
+                $total_discount = ($coupon->percentage / 100) * $subtotal;
+                $total = $subtotal - $total_discount;
+            }else{
+                $total_discount = $subtotal;
+                $total = $total_discount;
+            }
+
+            $set_coupon = is_null($order->has_coupon_code) ? '0.00' : $total_discount;
+            
+            $calculations = array(
+                'order_id' => $order->id,
+                'subtotal' => (float) $subtotal,
+                'tax' => $tax,
+                'coupon' => (float) $set_coupon,
+                'total' => $total
+            );
+
+            $data = array(
+                'subtotal' => $this->formatNumber($subtotal),
+                'tax' => $this->formatNumber($tax),
+                'coupon' => is_null($order->has_coupon_code) ? '₱ 0.00' : $this->formatNumber($total_discount),
+                'total' => $this->formatNumber($total)
+            );
         }else{
-            $total_discount = $subtotal;
-            $total = $total_discount;
+            $calculations = array(
+                'order_id' => null,
+                'subtotal' => 0,
+                'tax' => 0,
+                'coupon' => 0,
+                'total' => 0,
+            );
+
+            $data = array(
+                'subtotal' => '₱ 0.00',
+                'tax' => '₱ 0.00',
+                'coupon' => '₱ 0.00',
+                'total' => '₱ 0.00',
+            );
         }
 
-        $set_coupon = is_null($order->has_coupon_code) ? '0.00' : $total_discount;
-        
-        Session::put('calculations', array(
-            'order_id' => $order->id,
-            'subtotal' => (float) $subtotal,
-            'tax' => $tax,
-            'coupon' => (float) $set_coupon,
-            'total' => $total
-        ));
-
-        $data = array(
-            'subtotal' => $this->formatNumber($subtotal),
-            'tax' => $this->formatNumber($tax),
-            'coupon' => is_null($order->has_coupon_code) ? '₱ 0.00' : $this->formatNumber($total_discount),
-            'total' => $this->formatNumber($total)
-        );
+        Session::put('calculations', $calculations);
 
         return $data;
     }
