@@ -43,23 +43,19 @@ class HomeController extends Controller
         $menu = $this->menu->limitFields()->active()->latest()->get();
         $calc = [];
 
-        $check_order = $this->order
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->first();
-
-        $order = Session::get('order');
-        $calc = $this->getCalculations($order);
-        $ol = $this->order_list;
-        $order_list = $ol->getOrder($order->id)->latest()->get();
-
-        if(empty($check_order)){
+        $check_order = $this->order->where('user_id', Auth::id())->latest()->first();
+        if(empty($check_order)){ // no order history of user
             $has_order = false;
-        }else{
+            $order_list = [];
+        }else{ // has order history of user
             $has_order = true;
-            
-        }
 
+            $order = Session::get('order');
+            $calc = $this->getCalculations($order);
+            $ol = $this->order_list;
+            $order_list = $ol->getOrder($order->id)->latest()->get();
+        }
+        
         $params = array_merge([
             'categories' => @$categories,
             'menu' => @$menu,
