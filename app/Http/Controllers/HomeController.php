@@ -48,16 +48,16 @@ class HomeController extends Controller
             ->latest()
             ->first();
 
+        $order = Session::get('order');
+        $calc = $this->getCalculations($order);
+        $ol = $this->order_list;
+        $order_list = $ol->getOrder($order->id)->latest()->get();
+
         if(empty($check_order)){
             $has_order = false;
-            $order_list = 0;
         }else{
             $has_order = true;
-            $order = Session::get('order');
-            $calc = $this->getCalculations($order);
-
-            $ol = $this->order_list;
-            $order_list = $ol->getOrder($order->id)->latest()->get();
+            
         }
 
         $params = array_merge([
