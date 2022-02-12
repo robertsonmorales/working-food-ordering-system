@@ -81,10 +81,10 @@ $(document).ready(function(){
                 url: '/reset_order',
                 data: {
                     _token: token,
-                    order_id: $('#order_id').val()
+                    order_id: $('#order-id').val()
                 }
             }).then((res) => {
-                console.log(res);
+                // console.log(res);
 
                 if(res.data.status == 200){
                     $('.menu-list .card').remove();
@@ -92,6 +92,7 @@ $(document).ready(function(){
                     $('.btn-reset').addClass('d-none');
 
                     triggerCalculations(res.data);
+                    countOrders();
                 }
             }).catch(error => console.log(error));
         }
@@ -104,11 +105,12 @@ $(document).ready(function(){
             $('#modal').addClass('flexbox-center');
             $('#modal .modal-content').addClass('show');
         }else{
-            let o_id = $('#order_id').val();
+            let order_id = $('#order-id').val();
+            
             if(confirm('Are you sure to remove Coupon?')){
                 requestCoupon('post', '/apply_coupon', {
                     _token: token,
-                    oid: o_id,
+                    order_id: order_id,
                     status: 'remove', // add or remove
                 });
             }
@@ -118,12 +120,12 @@ $(document).ready(function(){
     // Modal for coupon
     $('.btn-claim').click(function(){
         let coupon = $('#coupod_code').val();
-        let oid = $('.btn-coupon').attr('data-order-id');
+        let order_id = $('#order-id').val();
 
         requestCoupon('post', '/apply_coupon', {
             _token: token,
             coupon_code: coupon,
-            oid: oid,
+            order_id: order_id,
             status: 'add'
         });
     });
@@ -131,7 +133,12 @@ $(document).ready(function(){
     // CLOSE MODAL
     $('.btn-close').click(() => {
         $('#modal').removeClass('flexbox-center');
-       $('#modal .modal-content').removeClass('show'); 
+        $('#modal .modal-content').removeClass('show'); 
+    });
+    
+    $('.btn-order-close').click(() => {
+        $('#order-modal').removeClass('flexbox-center');
+        $('#order-modal .modal-content').removeClass('show'); 
     });
     // ENDS HERE
 
@@ -146,13 +153,12 @@ $(document).ready(function(){
     // ENDS HERE
 });
 
-function requestCoupon(method, url, params, config=""){
+function requestCoupon(method, url, params){
     axios({
         method: method,
         url: url,
         data: params
     }).then((res) => {
-        console.log(res);
         
         if(res.data.status == 200){
 
@@ -181,7 +187,7 @@ function requestCoupon(method, url, params, config=""){
         if(res.data.status == 400){
             alert(res.data.message);
         }
-    });
+    }).catch(res => console.log(res));
 }
 
 function addOrderMenu(id){
@@ -200,13 +206,15 @@ function addOrderMenu(id){
         if(res.data.status == 200){
             $('.menu-is-empty').hide(100);
             $('.menu-list').prepend(res.data.html);
+            $('#order-id').val(res.data.order_id);
+            $('.order-no').html('Order #' + res.data.order_no);
 
             if($('#orders').hasClass('d-none') 
                 && $('#app').hasClass('no-order')
                 && $('#menu-list').hasClass('has-order')){
                 $('#orders').removeClass('d-none');
                 $('#app').removeClass('no-order');
-                $('#menu-list').removeClass('has-order')
+                $('#menu-list').removeClass('has-order');
             }
 
             triggerCalculations(res.data);
@@ -264,13 +272,23 @@ function triggerCalculations(data){
 }
 
 function countOrders(){
-    console.log($('.menu-list .card').length);
-    if($('.menu-list .card').length > 1){
+    let count_list = $('.menu-list .card').length;
+
+    $('#btn-save').attr('disabled', false);
+
+    if(count_list > 1){
         if($('.btn-reset').hasClass('d-none')){
             $('.btn-reset').removeClass('d-none');
+            
+        }
+    }else if(count_list >= 1) {
+        if($('.btn-coupon').hasClass('d-none')){
+            $('.btn-coupon').removeClass('d-none');
         }
     }else{
+        $('#btn-save').attr('disabled', true);
         $('.btn-reset').addClass('d-none');
+        $('.btn-coupon').addClass('d-none');
     }
 }
 

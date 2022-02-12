@@ -56,12 +56,13 @@ class Controller extends BaseController
         }
 
         $set_coupon = is_null($order->has_coupon_code) ? '0.00' : $total_discount;
-        $this->triggerCalculations(array(
+        
+        Session::put('calculations', array(
             'order_id' => $order->id,
-            'subtotal' => (int) $subtotal,
+            'subtotal' => (float) $subtotal,
             'tax' => $tax,
-            'coupon' => (int) $set_coupon,
-            'total' => (int) $total
+            'coupon' => (float) $set_coupon,
+            'total' => $total
         ));
 
         $data = array(
@@ -85,9 +86,5 @@ class Controller extends BaseController
         }
 
         return response()->json($params);
-    }
-
-    public function triggerCalculations($data){
-        Session::put('calculations', $data);
     }
 }
