@@ -3,6 +3,18 @@
 let token = $('meta[name=csrf-token]').attr('content');
 
 $(document).ready(function(){
+    // let path = window.location.pathname;
+    // let pathname = path.split('/').reverse()[0];
+
+    // let navs = $('.btn-nav-item');
+    // for (let i = 0; i < navs.length; i++) {
+    //     if(navs[i].getAttribute('data-nav') == pathname){
+    //         navs[i].classList.add('active');
+    //     }else{
+    //         navs[i].classList.remove('active');
+    //     }
+    // }
+
     // Tab Select
     $('.nav-category').click(function(){
         let cat_id = $(this).attr('id');
@@ -143,9 +155,7 @@ $(document).ready(function(){
     // ENDS HERE
 
     // LOGOUT USER
-    $('.btn-user').click(function(event){
-        event.preventDefault();
-
+    $('.btn-logout').click(function(){
         if(confirm('Are you sure you want to logout?')){
             $('#logout-form').submit();
         }
@@ -273,22 +283,24 @@ function triggerCalculations(data){
 
 function countOrders(){
     let count_list = $('.menu-list .card').length;
-
     $('#btn-save').attr('disabled', false);
 
-    if(count_list > 1){
-        if($('.btn-reset').hasClass('d-none')){
-            $('.btn-reset').removeClass('d-none');
-            
-        }
-    }else if(count_list >= 1) {
+    if(count_list >= 1) {
         if($('.btn-coupon').hasClass('d-none')){
             $('.btn-coupon').removeClass('d-none');
         }
     }else{
         $('#btn-save').attr('disabled', true);
-        $('.btn-reset').addClass('d-none');
         $('.btn-coupon').addClass('d-none');
+    }
+
+    if(count_list >= 2){
+        if($('.btn-reset').hasClass('d-none')){
+            $('.btn-reset').removeClass('d-none');
+            
+        }
+    } else{
+        $('.btn-reset').addClass('d-none');
     }
 }
 

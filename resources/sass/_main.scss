@@ -4,7 +4,10 @@ main{  // * #menus
     // * 5% 7% 10% 78%
     overflow-y: hidden;
 
-    .header, .menu-categories, .group-box{
+    .header, 
+    .menu-categories, 
+    .group-box,
+    .order-list{
         margin: 0 $side-margin;
     }
 

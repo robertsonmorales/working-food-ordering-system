@@ -82,12 +82,15 @@
 
 @endsection
 
-@section('scripts')
+@section('plugins')
+
 <!-- plugins -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <!-- ends here -->
 
+@endsection
+@section('scripts')
 <!-- custom scripts -->
 <script src="{{ asset('js/custom.js') }}"></script>
 @endsection
