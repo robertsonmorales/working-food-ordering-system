@@ -25,4 +25,8 @@ class Order extends Model
     public function scopeLimitFields($query){
         return $query->select(array_merge($this->fillable, ['id']));
     }
+
+    public function transaction(){
+        return $this->hasOne(Transaction::class, 'order_id');
+    }
 }

@@ -19,4 +19,8 @@ class Transaction extends Model
         'total',
         'status'
     ];
+
+    public function order(){
+        return $this->belongsTo(Order::class, 'order_id');
+    }
 }

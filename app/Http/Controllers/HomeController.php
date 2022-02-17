@@ -34,7 +34,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function menu()
+    public function pos()
     {
         // Session::forget('calculations');
         // Session::forget('order');
@@ -65,7 +65,7 @@ class HomeController extends Controller
             'order_list' => @$order_list
         ], @$calc);
 
-        return view('pages.menu', $params);
+        return view('pages.pos', $params);
     }
 
     // * ADD ORDER MENU
@@ -211,32 +211,6 @@ class HomeController extends Controller
         }
     }
 
-    // * SEARCH MENU
-    public function searchMenu(Request $request){
-        $data = $request->get('search');
-
-        $menu = $this->menu->limitFields()->searchFor($data)->latest()->get();
-        $htmlContent = "";
-
-        foreach ($menu as $key => $value) {
-            $htmlContent .= '<button class="card btn-card btn-card-'.$value['id'].'"
-                data-category="'.$value['menu_category_id'].'"
-                data-menu-id="'.$value['id'].'"
-                onclick="addOrder('.$value['id'].')">
-                <img class="img-fluid mb-2" 
-                    src="'.$value['menu_img'].'" 
-                    alt="'.$value['menu_name'].'">
-                <div class="card-body">
-                    <p class="card-text">
-                        <span class="name">'.$value['menu_name'].'</span>
-                        <span class="price">'.$this->formatNumber($value['price']).'</span></p>
-                </div>
-            </button>';
-        }
-        
-        return response()->json($htmlContent);
-    }
-
     // * ORDER SUMMARY VIEW
     public function orderSummary(Request $request){
         $order_id = $request->input('order_id');
@@ -277,7 +251,7 @@ class HomeController extends Controller
                 Session::put('order', $order);
 
                 return redirect()
-                    ->route('home')
+                    ->route('pos')
                     ->with('message', 'Order have been successfully saved and is now pending.');
             }else{
                 abort(400);
@@ -285,5 +259,14 @@ class HomeController extends Controller
         }else{
             abort(400);
         }
+    }
+
+    public function orders(){
+        $data = $this->trans->get();
+        $data = $this->changeValue($data);
+        
+        return view('pages.order_transactions', [
+            'data' => $data
+        ]);
     }
 }
