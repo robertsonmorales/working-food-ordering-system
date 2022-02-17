@@ -16,15 +16,17 @@
                     </a>
                 </li>
                 <li class="list-item">
-                    <a href="#menu" 
-                        title="menu"
+                    <a href="{{ route('pos') }}" 
+                        title="POS"
+                        data-nav="pos"
                         class="btn-nav-item">
                         <i data-feather="activity"></i>
                     </a>
                 </li>
                 <li class="list-item">
-                    <a href="#orders" 
-                        title="orders"
+                    <a href="{{ route('order_transactions') }}" 
+                        title="Order Transactions"
+                        data-nav="order_transactions"
                         class="btn-nav-item">
                         <i data-feather="book-open"></i>
                     </a>

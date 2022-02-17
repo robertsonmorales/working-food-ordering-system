@@ -6,7 +6,7 @@
         <div class="col-md-7">
             <div class="card p-4">
                 <h4>
-                	<a href="{{ route('home') }}"><i data-feather="arrow-left-circle"></i></a>
+                	<a href="{{ route('pos') }}"><i data-feather="arrow-left-circle"></i></a>
                 	<span class="ms-2">{{ __('Order Summary') }}</span>
                 </h4>
 

@@ -9,18 +9,14 @@
     </div>
 
     <!-- categories -->
-    <div class="menu-categories mt-2">
+    <div class="menu-categories">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link nav-category category-all active" 
-                    href="#" 
-                    id="0">All</a>
+                <button class="nav-link nav-category category-all active">All</button>
             </li>
             @foreach ($categories as $item)
             <li class="nav-item">
-                <a class="nav-link nav-category" 
-                    href="#" 
-                    id="{{ $item->id }}">{{ $item->category_name }}</a>
+                <button class="nav-link nav-category" id="{{ $item->id }}">{{ $item->category_name }}</button>
             </li>
             @endforeach
         </ul>
@@ -28,7 +24,7 @@
     <!-- ends here -->
 
     <!-- Search here -->
-    <!-- <div class="group-box">
+    <div class="group-box">
         <span class="icon">
             <i data-feather="search"></i>
         </span>
@@ -39,7 +35,7 @@
             autocomplete="off" 
             class="form-control search-control"
             placeholder="Search here...">
-    </div> -->
+    </div>
     <!-- ends here -->
 
     <!-- menu -->
@@ -62,16 +58,9 @@
             @endforeach
         </div>
 
-        <div id="loader" class="d-none">
-            <div class="spinner-border text-primary" role="status">
-                <!-- <span class="sr-only">Loading...</span> -->
-            </div>
-            <span class="ms-2">Loading...</span>
-        </div>
-
         <div id="no-result" class="d-none">
             <span><i data-feather="search"></i></span>
-            <span class="ms-2">No Result.</span>
+            <span class="ms-2">No Result</span>
         </div>
     </div>
     <!-- ends here -->
@@ -83,14 +72,11 @@
 @endsection
 
 @section('plugins')
-
-<!-- plugins -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<!-- ends here -->
-
 @endsection
+
 @section('scripts')
-<!-- custom scripts -->
 <script src="{{ asset('js/custom.js') }}"></script>
+<script src="{{ asset('js/pages/pos.js') }}"></script>
 @endsection

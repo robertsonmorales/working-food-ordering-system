@@ -4,9 +4,9 @@
 <div class="container" style="height: 100vh;">
     <div class="row justify-content-center align-items-center h-100">
         <div class="col-md-5">
-            <div class="logo-brand text-center mb-5">
+            {{-- <div class="logo-brand text-center mb-5">
                 <img src="{{ asset('img/logo.svg') }}" width="285" style="object-fit: cover;">
-            </div>
+            </div> --}}
             <div class="card p-4">
                 <div class="card-header mb-4 h4 ps-0">{{ __('Login') }}</div>
 

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
-use Session;
+use Session, Arr;
 use App\Models\{MenuCategories, Order, OrderList, User, Menu, Coupon, Transaction};
 
 class Controller extends BaseController
@@ -105,5 +105,45 @@ class Controller extends BaseController
         }
 
         return response()->json($params);
+    }
+
+    public function changeValue($data){
+        foreach ($data as $key => $value) {
+            if(Arr::exists($value, 'order_id')){
+                $value['order_id'] = "#" . $value->order->order_no;
+            }
+            
+            if(Arr::exists($value, 'subtotal')){
+                $value['subtotal'] = $this->formatNumber($value->subtotal);
+            }
+
+            if(Arr::exists($value, 'order_id')){
+                $value['tax'] = $this->formatNumber($value->tax);
+            }
+
+            if(Arr::exists($value, 'coupon')){
+                $value['coupon'] = $this->formatNumber($value->coupon);
+            }
+
+            if(Arr::exists($value, 'total')){
+                $value['total'] = $this->formatNumber($value->total);
+            } 
+
+            if(Arr::exists($value, 'status')){
+                if($value['status'] == 1){
+                    $value['status'] = 'Pending';
+                }else if($value['status'] == 2){
+                    $value['status'] = 'Processing';
+                }else if($value['status'] == 3){
+                    $value['status'] = 'On Delivery';
+                }else if($value['status'] == 4){
+                    $value['status'] = 'Received';
+                }else if($value['status'] == 0){
+                    $value['status'] = 'Cancelled';
+                }
+            } 
+        }
+
+        return $data;
     }
 }
