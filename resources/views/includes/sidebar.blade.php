@@ -1,10 +1,10 @@
 <aside id="sidebar">
     <nav>
         <div class="logo">
-            <img src="{{ asset('img/logo.jpg') }}"
+            {{-- <img src="{{ asset('img/logo.jpg') }}"
                 alt="logo brand"
                 width="50"
-                height="50">
+                height="50"> --}}
         </div>
         <div class="nav-list">
             <ul class="list">
@@ -53,7 +53,7 @@
                 method="POST">
                 @csrf
 
-                <button type="button" class="btn btn-user btn-logout">
+                <button type="button" class="btn btn-user btn-logout" title="Logout">
                     <i data-feather="log-out"></i>
                 </button>
             </form>
