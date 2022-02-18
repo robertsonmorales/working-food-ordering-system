@@ -32,6 +32,8 @@ $('.nav-category').on('click', function(){
 $('#search').on('keyup', function() {
     let search = $(this).val().toLowerCase();
 
+    console.log($('.btn-card'));
+
     $('.btn-card .name').filter(function(){
         let parentElement = $(this).parent().parent().parent();
         let filter = $(this).text().toLowerCase().indexOf(search) > -1;
@@ -47,7 +49,7 @@ $('#search').on('keyup', function() {
 });
 
 // SELECT MENU
-$('.btn-card').click(function() {
+$('.btn-card').on('click', function() {
     let data_id = $(this).attr('data-menu-id');
 
     addOrderMenu(data_id);
@@ -55,7 +57,7 @@ $('.btn-card').click(function() {
 // ENDS HERE
 
 // REMOVE MENU
-$('.btn-remove').click(function(){
+$('.btn-remove').on('click', function(){
     let id = $(this).attr('data-id');
 
     removeOrderMenu(id);
@@ -63,7 +65,7 @@ $('.btn-remove').click(function(){
 // ENDS HERE
 
 // RESET ORDERED MENU
-$('.btn-reset').click(function(){
+$('.btn-reset').on('click', function(){
     if(confirm('Reset all menu from Order?')){
         axios({
             method: 'post',
@@ -183,7 +185,7 @@ function addOrderMenu(id){
         
         if(res.data.status == 200){
             $('.menu-is-empty').hide(100);
-            $('.menu-list').prepend(res.data.html);
+            $('.menu-list').append(res.data.html);
             $('#order-id').val(res.data.order_id);
             $('.order-no').html('Order #' + res.data.order_no);
 
